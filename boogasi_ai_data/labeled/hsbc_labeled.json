@@ -1,0 +1,26 @@
+{
+  "bank": "HSBC_PHILIPPINES",
+  "statement_type": "credit_card_statement",
+  "statement_period": "2025-08",
+  "currency": "PHP",
+  "payment_summary": {
+    "totalDue": 95485.31
+  },
+  "transactions": [
+    {"date": "2025-08-05", "description": "HAPCHAN WM STA ROSA SANTA ROSA PH", "amount": -1509, "category": "dining"},
+    {"date": "2025-08-05", "description": "NEW STAR SHOPPING MART LAGUNA PH", "amount": -2757, "category": "groceries"},
+    {"date": "2025-08-07", "description": "HANDYMAN WHI STA ROSA PHILIPPINES PH", "amount": -89, "category": "shopping"},
+    {"date": "2025-08-11", "description": "WILCON STA ROSA D33 SANTA ROSA PH", "amount": -587, "category": "shopping"},
+    {"date": "2025-08-11", "description": "MR DIY WSTS SANTA ROSA PH", "amount": -287, "category": "shopping"},
+    {"date": "2025-08-14", "description": "LAZADA PH MAKATI PH", "amount": -1996, "category": "shopping"},
+    {"date": "2025-08-15", "description": "UNITOP STA ROSA LAG PC STA ROSA PH", "amount": -859.50, "category": "shopping"},
+    {"date": "2025-08-18", "description": "ALLHOME STA ROSA LAGUNA PH", "amount": -2500, "category": "shopping"},
+    {"date": "2025-08-18", "description": "WILCON STA ROSA D33 SANTA ROSA PH", "amount": -1611.40, "category": "shopping"},
+    {"date": "2025-08-20", "description": "NEW STAR SHOPPING MART LAGUNA PH", "amount": -2302, "category": "groceries"},
+    {"date": "2025-08-22", "description": "MR DIY WSTS STA ROSA PH", "amount": -324, "category": "shopping"},
+    {"date": "2025-08-26", "description": "HANDYMAN WHI STA ROSA PHILIPPINES PH", "amount": -424, "category": "shopping"},
+    {"date": "2025-08-26", "description": "MR DIY WSTS SANTA ROSA PH", "amount": -109, "category": "shopping"},
+    {"date": "2025-08-26", "description": "DALI 01106 SANTA ROSA PH", "amount": -605.50, "category": "groceries"},
+    {"date": "2025-08-27", "description": "MR DIY WSTS SANTA ROSA PH SANTA", "amount": -459, "category": "shopping"}
+  ]
+}

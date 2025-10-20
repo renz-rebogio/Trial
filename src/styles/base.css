@@ -1,0 +1,98 @@
+@tailwind base;
+
+@layer base {
+  :root {
+    /* Default Theme (Dark background, light foreground) */
+    --background: 222 47% 11%; 
+    --foreground: 210 40% 98%; 
+
+    --card: 222 47% 15%; 
+    --card-foreground: 210 40% 96%;
+
+    --popover: 222 47% 13%;
+    --popover-foreground: 210 40% 96%;
+    
+    --border: 222 47% 30%;
+    --input: 222 47% 20%; /* Default input background for dark theme */
+    
+    /* Boogasi Core Colors */
+    --boogasi-blue-val: 210 100% 56%;
+    --boogasi-red-val: 0 84.2% 60.2%;
+    --boogasi-yellow-val: 45 100% 51%;
+    --boogasi-green-val: 145 63.4% 49.2%;
+    --boogasi-cyan-val: 180 100% 39%;
+    --boogasi-purple-val: 260 89% 60%;
+    --boogasi-pink-val: 330 89% 60%;
+    --boogasi-orange-val: 25 100% 55%;
+    --boogasi-teal-val: 180 100% 39%; /* Can be same as cyan or a distinct teal */
+    --boogasi-white-val: 0 0% 100%;
+    --boogasi-black-val: 220 25% 10%; /* For high contrast text on light backgrounds */
+
+    /* Main Interactive Colors - These are used by buttons and interactive elements by default */
+    --primary: hsl(var(--boogasi-blue-val));
+    --primary-foreground: hsl(var(--boogasi-white-val)); /* Text on primary buttons */
+    
+    --secondary: hsl(var(--boogasi-teal-val));
+    --secondary-foreground: hsl(var(--boogasi-white-val)); /* Text on secondary buttons */
+
+    --accent: hsl(var(--boogasi-pink-val));
+    --accent-foreground: hsl(var(--boogasi-white-val)); /* Text on accent elements */
+
+    --destructive: hsl(var(--boogasi-red-val));
+    --destructive-foreground: hsl(var(--boogasi-white-val)); /* Text on destructive buttons */
+
+    --muted: 222 47% 25%; 
+    --muted-foreground: 210 40% 70%; 
+    
+    --ring: hsl(var(--boogasi-blue-val)); /* Focus ring, usually primary */
+    --radius: 0.75rem;
+
+
+    /* Brighter Theme Specific Variables (Applied when .brighter-theme-area is active) */
+    /* Backgrounds for the brighter theme */
+    --brighter-background-val: 0 0% 98%; /* Very light gray, almost white */
+    --brighter-card-bg-val: 0 0% 100%;   /* Pure white for cards */
+    --brighter-card-alt-bg-val: 210 30% 96%; /* Slightly off-white for subtle variation */
+
+    /* Text colors for the brighter theme (high contrast against light backgrounds) */
+    --brighter-foreground-val: var(--boogasi-black-val); /* Main text color on light backgrounds */
+    --brighter-muted-foreground-val: 220 10% 45%; /* Muted text on light backgrounds */
+    
+    /* Borders and Inputs for brighter theme */
+    --brighter-border-val: 220 15% 88%; /* Light gray border */
+    --brighter-input-bg-val: var(--boogasi-white-val); /* White input background */
+
+    /* Brighter Text Accents (for headings or specific text highlights on light backgrounds) */
+    --brighter-text-primary-val: var(--boogasi-blue-val);
+    --brighter-text-secondary-val: var(--boogasi-teal-val);
+    --brighter-text-accent-val: var(--boogasi-pink-val);
+    --brighter-text-success-val: var(--boogasi-green-val);
+    --brighter-text-warning-val: var(--boogasi-orange-val);
+    --brighter-text-info-val: var(--boogasi-purple-val);
+  }
+
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700&display=swap');
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter', sans-serif; 
+    @apply text-foreground; 
+    font-weight: 700; 
+  }
+
+  p, span, div, li, label, button, input, textarea, select {
+     font-family: 'Inter', sans-serif;
+  }
+  
+  pre, code, .mono-font {
+    font-family: 'Roboto Mono', 'Consolas', 'Menlo', monospace; 
+  }
+}

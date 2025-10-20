@@ -1,0 +1,347 @@
+@import url('@/styles/base.css');
+@import url('@/styles/components.css');
+@import url('@/styles/utilities.css');
+@import url('@/styles/ai-report.css');
+@import url('@/styles/feed.css');
+@import url('@/styles/navbar.css');
+@import url('@/styles/page-specific.css');
+@import url('@/styles/radix-overrides.css');
+@import url('@/styles/scrollbar.css');
+
+:root {
+  /* Base dark theme (default, can be overridden by .brighter-theme-area) */
+  --background: hsl(224, 71.4%, 4.1%); 
+  --foreground: hsl(210, 20%, 98%); 
+  
+  --muted: hsl(223, 47.1%, 11.2%); 
+  --muted-foreground: hsl(215.4, 16.3%, 70%);
+  
+  --popover: hsl(224, 71.4%, 8%); 
+  --popover-foreground: hsl(210, 20%, 98%);
+  
+  --card: hsl(224, 71.4%, 9%); 
+  --card-foreground: hsl(210, 20%, 98%);
+  
+  --border: hsl(215, 27.9%, 25%); 
+  --input: hsl(215, 27.9%, 12%); 
+  
+  /* Boogasi Core Colors (Neon Focus) */
+  --boogasi-blue-val: 205 100% 50%;   
+  --boogasi-red-val: 350 100% 55%;    
+  --boogasi-yellow-val: 50 100% 50%;  
+  --boogasi-green-val: 135 100% 50%;  
+  --boogasi-cyan-val: 180 100% 50%;   
+  --boogasi-purple-val: 270 100% 60%; 
+  --boogasi-pink-val: 330 100% 55%;   
+  --boogasi-orange-val: 30 100% 50%;  
+  --boogasi-teal-val: 165 100% 45%;   
+
+  --boogasi-white-val: 0 0% 100%;
+  --boogasi-black-val: 220 25% 10%;
+
+  /* Main Interactive Colors */
+  --primary: var(--boogasi-blue-val); 
+  --primary-foreground: var(--boogasi-white-val);
+  
+  --secondary: var(--boogasi-teal-val); 
+  --secondary-foreground: var(--boogasi-black-val); /* Changed to black for better contrast on teal */
+  
+  --accent: var(--boogasi-pink-val); 
+  --accent-foreground: var(--boogasi-white-val);
+
+  --destructive: var(--boogasi-red-val); 
+  --destructive-foreground: var(--boogasi-white-val);
+
+  --ring: var(--boogasi-blue-val);
+
+
+  /* Brighter Theme Variables */
+  --brighter-background: hsl(var(--brighter-background-val)); 
+  --brighter-foreground: hsl(var(--brighter-foreground-val)); 
+  
+  --brighter-card-bg: hsl(var(--brighter-card-bg-val)); 
+  --brighter-card-foreground: hsl(var(--brighter-card-foreground-val));
+  
+  --brighter-card-alt-bg: hsl(var(--brighter-card-alt-bg-val)); 
+  
+  --brighter-border: hsl(var(--brighter-border-val)); 
+  --brighter-input-bg: hsl(var(--brighter-input-bg-val));
+  --brighter-muted-foreground: hsl(var(--brighter-muted-foreground-val));
+
+  /* Text colors for use on light backgrounds, derived from Neon Boogasi core for vibrancy */
+  --brighter-text-primary: hsl(var(--boogasi-blue-val));
+  --brighter-text-secondary: hsl(var(--boogasi-teal-val));
+  --brighter-text-accent: hsl(var(--boogasi-pink-val));
+  --brighter-text-success: hsl(var(--boogasi-green-val));
+  --brighter-text-warning: hsl(var(--boogasi-orange-val));
+  --brighter-text-info: hsl(var(--boogasi-purple-val));
+  --brighter-yellow-text: hsl(var(--boogasi-yellow-val)); /* For disclaimers on light bg */
+
+
+  /* Component Specific Variables */
+  --feed-card-bg-brighter: var(--brighter-card-bg-val);
+  --feed-primary-brighter: var(--boogasi-blue-val); 
+  --feed-secondary-brighter: var(--boogasi-teal-val); 
+  --feed-accent-orange-brighter: var(--boogasi-orange-val); 
+  --feed-accent-pink-brighter: var(--boogasi-pink-val); 
+  --feed-card-fg: var(--brighter-foreground-val);
+
+  --marketplace-card-bg: var(--background); 
+  --marketplace-border: var(--border);
+  --marketplace-hover-border: var(--secondary); 
+  --marketplace-text-primary: hsl(var(--boogasi-blue-val)); 
+  --marketplace-text-secondary: hsl(var(--boogasi-teal-val)); 
+  
+  --calendar-bg: var(--brighter-card-bg-val);
+  --calendar-header-bg: var(--brighter-card-alt-bg-val);
+  --calendar-event-bg: hsl(var(--boogasi-blue-val)); 
+  --calendar-event-alt-1-bg: hsl(var(--boogasi-purple-val)); 
+  --calendar-event-alt-2-bg: hsl(var(--boogasi-orange-val)); 
+  --calendar-event-text: hsl(var(--boogasi-white-val));
+  --calendar-today-bg: hsla(var(--boogasi-yellow-val), 0.15); 
+  --calendar-text-color: var(--brighter-foreground-val); 
+  --calendar-border-color: var(--brighter-border-val);
+  --calendar-modal-bg: var(--brighter-card-bg-val);
+
+  --notes-card-bg: var(--brighter-card-alt-bg-val);
+
+  --ai-assistant-bg: var(--brighter-card-bg-val);
+  --ai-assistant-header-bg: var(--brighter-card-alt-bg-val);
+  --ai-assistant-input-bg: var(--brighter-input-bg-val);
+  --ai-assistant-message-user-bg: hsla(var(--boogasi-blue-val), 0.1); 
+  --ai-assistant-message-ai-bg: hsla(var(--boogasi-teal-val), 0.08); 
+  --ai-assistant-text-color: var(--brighter-foreground-val);
+  --ai-assistant-button-bg: hsl(var(--primary));
+  --ai-assistant-button-text: hsl(var(--primary-foreground));
+
+
+  --my-investments-card-bg: var(--brighter-card-bg-val);
+  --my-investments-card-icon-bg: hsla(var(--boogasi-blue-val), 0.1);
+
+  /* AI Report "Clean White Invoice" Style variables */
+  --clean-white-bg: hsl(0 0% 100%); /* Pure white background */
+  --clean-white-fg: hsl(220 25% 20%); /* Dark gray text for readability */
+  --clean-white-muted-fg: hsl(220 15% 45%); /* Lighter gray for muted text */
+  --clean-white-border-color: hsl(220 20% 90%); /* Light gray border */
+  --clean-white-border-strong: hsl(220 20% 80%); /* Stronger border for table headers */
+  --clean-white-header-bg: hsl(220 30% 97%); /* Very light gray for table headers */
+
+  /* Report text on light backgrounds - make sure these use Boogasi core values for consistency */
+  --report-text-boogasi-blue-dark: hsl(var(--boogasi-blue-val)); /* For headlines */
+  --report-text-negative: hsl(var(--boogasi-red-val)); 
+  --report-text-positive: hsl(var(--boogasi-green-val)); 
+  --report-text-suggestion-yellow: hsl(var(--boogasi-yellow-val));
+  --report-text-orange: hsl(var(--boogasi-orange-val));
+  --report-text-source: hsl(var(--boogasi-teal-val));
+  --report-text-currency: hsl(var(--boogasi-black-val)); /* Dark text for currency on light bg */
+  --report-text-dark-purple: hsl(var(--boogasi-purple-val));
+
+  /* AI Analysis Actions Page Specific Card Background */
+  --card-bg-bright-purple-tint: hsl(270 100% 15%); /* Dark Purple background for the card as per image */
+}
+
+/* General Brighter Theme Area Styles */
+.brighter-theme-area {
+  background-color: hsl(var(--brighter-background-val));
+  color: hsl(var(--brighter-foreground-val)); 
+}
+
+.brighter-theme-area .card, 
+.brighter-theme-area .dialog-content { 
+  background-color: hsl(var(--brighter-card-bg-val)) !important;
+  color: hsl(var(--brighter-card-foreground-val)) !important; 
+  border-color: hsl(var(--brighter-border-val)) !important;
+}
+
+/* Override for AI Analysis Actions card specifically if it needs to be dark */
+.ai-analysis-actions-card { 
+  background-color: hsl(var(--card-bg-bright-purple-tint)) !important;
+  color: hsl(var(--primary-foreground)) !important; 
+  border-color: hsl(var(--boogasi-purple-val), 0.3) !important;
+}
+.ai-analysis-actions-card .card-title,
+.ai-analysis-actions-card .text-primary-foreground { /* This class is used for button text and other elements that need light text on this dark card */
+  color: hsl(var(--primary-foreground)) !important;
+}
+.ai-analysis-actions-card .card-description,
+.ai-analysis-actions-card .text-muted-foreground {
+  color: hsl(var(--muted-foreground)) !important; 
+}
+
+.ai-analysis-actions-card .button-outline-on-dark {
+  color: hsl(var(--primary-foreground)) !important;
+}
+
+.brighter-theme-area .card-title, 
+.brighter-theme-area .dialog-title,
+.brighter-theme-area h1,
+.brighter-theme-area h2,
+.brighter-theme-area h3,
+.brighter-theme-area h4 {
+  color: hsl(var(--brighter-foreground-val)) !important;
+}
+
+.brighter-theme-area .card-description,
+.brighter-theme-area .dialog-description,
+.brighter-theme-area .text-muted-foreground,
+.brighter-theme-area p:not(.ai-report-invoice p), /* Exclude AI report from this specific rule if it has its own */
+.brighter-theme-area span:not(.ai-report-invoice span),
+.brighter-theme-area label { 
+  color: hsl(var(--brighter-muted-foreground-val)) !important;
+}
+.brighter-theme-area .text-foreground {
+  color: hsl(var(--brighter-foreground-val)) !important;
+}
+
+
+/* Marketplace cards remain dark by default */
+.marketplace-page-container .glassmorphic-card-hover {
+  background: hsla(var(--card), 0.8); 
+  border-color: hsla(var(--boogasi-cyan-val), 0.4);
+  color: hsl(var(--card-foreground));
+}
+.marketplace-page-container .glassmorphic-card-hover:hover {
+  box-shadow: 0 8px 32px 0 hsla(var(--boogasi-cyan-val), 0.3), 0 0 0 1px hsla(var(--boogasi-cyan-val)/0.5);
+}
+.marketplace-page-container .glassmorphic-card-hover .text-slate-100 { color: hsl(var(--foreground));}
+.marketplace-page-container .glassmorphic-card-hover .text-slate-300 { color: hsl(var(--muted-foreground));}
+.marketplace-page-container .glassmorphic-card-hover .text-slate-400 { color: hsl(var(--muted-foreground)/0.8);}
+.marketplace-page-container .glassmorphic-card-hover .bg-slate-700\/50 { background-color: hsla(var(--muted), 0.5);}
+
+.marketplace-page-container .glassmorphic-card-hover .text-\[hsl\(var\(--brighter-green\)\)\] { color: hsl(var(--boogasi-green-val));}
+.marketplace-page-container .glassmorphic-card-hover .text-\[hsl\(var\(--brighter-blue\)\)\] { color: hsl(var(--boogasi-blue-val));}
+.marketplace-page-container .glassmorphic-card-hover .text-\[hsl\(var\(--brighter-orange\)\)\] { color: hsl(var(--boogasi-orange-val));}
+.marketplace-page-container .glassmorphic-card-hover .text-\[hsl\(var\(--brighter-teal\)\)\] { color: hsl(var(--boogasi-teal-val));}
+.marketplace-page-container .glassmorphic-card-hover .text-\[hsl\(var\(--brighter-pink\)\)\] { color: hsl(var(--boogasi-pink-val));}
+
+.marketplace-page-container .glassmorphic-card-hover .border-\[hsl\(var\(--brighter-blue\)\)\] { border-color: hsl(var(--boogasi-blue-val));}
+.marketplace-page-container .glassmorphic-card-hover .hover\:bg-\[hsl\(var\(--brighter-blue\)\)\]\/20:hover { background-color: hsla(var(--boogasi-blue-val), 0.2);}
+.marketplace-page-container .glassmorphic-card-hover .from-\[hsl\(var\(--brighter-orange\)\)\] { --tw-gradient-from: hsl(var(--boogasi-orange-val)) var(--tw-gradient-from-position); }
+.marketplace-page-container .glassmorphic-card-hover .to-\[hsl\(var\(--brighter-pink\)\)\] { --tw-gradient-to: hsl(var(--boogasi-pink-val)) var(--tw-gradient-to-position); }
+
+
+.brighter-theme-area .card-header,
+.brighter-theme-area .card-footer,
+.brighter-theme-area .dialog-header,
+.brighter-theme-area .dialog-footer {
+  border-color: hsl(var(--brighter-border-val)) !important;
+}
+
+.brighter-theme-area input, 
+.brighter-theme-area textarea, 
+.brighter-theme-area .select-trigger-style,
+.brighter-theme-area .tabs-list { 
+  background-color: hsl(var(--brighter-input-bg-val)) !important;
+  border-color: hsl(var(--brighter-border-val)) !important;
+  color: hsl(var(--brighter-foreground-val)) !important; 
+}
+.brighter-theme-area input::placeholder, 
+.brighter-theme-area textarea::placeholder {
+  color: hsl(var(--brighter-muted-foreground-val)) !important;
+}
+.brighter-theme-area input:focus-visible, 
+.brighter-theme-area textarea:focus-visible, 
+.brighter-theme-area .select-trigger-style:focus-visible {
+  border-color: hsl(var(--primary)) !important; 
+  box-shadow: 0 0 0 2px hsla(var(--primary), 0.4) !important;
+}
+
+.brighter-theme-area .tabs-trigger {
+  color: hsl(var(--brighter-muted-foreground-val)) !important; 
+}
+.brighter-theme-area .tabs-trigger:hover {
+  background-color: hsla(var(--primary), 0.1) !important; 
+  color: hsl(var(--primary)) !important; 
+}
+.brighter-theme-area .tabs-trigger[data-state="active"] {
+  background-color: hsl(var(--primary)) !important; 
+  color: hsl(var(--primary-foreground)) !important; 
+}
+
+.fc { 
+  background-color: var(--calendar-bg) !important;
+  color: var(--calendar-text-color) !important;
+  border: 1px solid var(--calendar-border-color) !important;
+  border-radius: 0.5rem; 
+}
+.fc .fc-toolbar.fc-header-toolbar {
+  background-color: var(--calendar-header-bg) !important;
+  border-bottom: 1px solid var(--calendar-border-color) !important;
+  padding: 0.75rem;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+}
+.fc .fc-toolbar-title {
+  color: var(--calendar-text-color) !important;
+  font-size: 1.25em !important;
+}
+.fc .fc-daygrid-day-frame, .fc .fc-timegrid-slot {
+  border-color: var(--calendar-border-color) !important;
+}
+.fc .fc-daygrid-day-number, .fc .fc-col-header-cell-cushion {
+  color: var(--calendar-text-color) !important;
+}
+.fc .fc-day-today {
+  background-color: var(--calendar-today-bg) !important;
+}
+.fc-event {
+  background-color: hsl(var(--calendar-event-bg)) !important; 
+  border-color: hsl(var(--calendar-event-bg)) !important;
+  color: hsl(var(--calendar-event-text)) !important;
+  box-shadow: 0 2px 5px hsla(var(--boogasi-blue-val), 0.3); 
+}
+.fc-event:nth-child(3n+2) { 
+  background-color: hsl(var(--calendar-event-alt-1-bg)) !important;
+  border-color: hsl(var(--calendar-event-alt-1-bg)) !important;
+  box-shadow: 0 2px 5px hsla(var(--boogasi-purple-val), 0.3); 
+}
+.fc-event:nth-child(3n+3) {
+  background-color: hsl(var(--calendar-event-alt-2-bg)) !important;
+  border-color: hsl(var(--calendar-event-alt-2-bg)) !important;
+  box-shadow: 0 2px 5px hsla(var(--boogasi-orange-val), 0.3); 
+}
+.fc-event .fc-event-title {
+  color: hsl(var(--calendar-event-text)) !important;
+}
+
+.brighter-theme-area .dialog-content .label {
+  color: hsl(var(--brighter-foreground-val)) !important; 
+}
+
+
+/* Neon Icon Colors */
+.icon-neon-green { color: hsl(var(--boogasi-green-val)); }
+.icon-neon-orange { color: hsl(var(--boogasi-orange-val)); }
+.icon-neon-blue { color: hsl(var(--boogasi-blue-val)); }
+.icon-neon-purple { color: hsl(var(--boogasi-purple-val)); }
+.icon-neon-pink { color: hsl(var(--boogasi-pink-val)); }
+.icon-neon-cyan { color: hsl(var(--boogasi-cyan-val)); }
+.icon-neon-teal { color: hsl(var(--boogasi-teal-val)); }
+.icon-neon-yellow { color: hsl(var(--boogasi-yellow-val)); }
+.icon-neon-red { color: hsl(var(--boogasi-red-val)); }
+
+
+.icon-neon-green:hover, 
+.icon-neon-orange:hover, 
+.icon-neon-blue:hover, 
+.icon-neon-purple:hover,
+.icon-neon-pink:hover, 
+.icon-neon-cyan:hover, 
+.icon-neon-teal:hover, 
+.icon-neon-yellow:hover,
+.icon-neon-red:hover {
+  filter: drop-shadow(0 0 3px currentColor) drop-shadow(0 0 6px currentColor);
+}
+
+/* Ensure Lucide icons within buttons that use these classes also get the color */
+button > .icon-neon-green, .file-upload-icon.icon-neon-green { color: hsl(var(--boogasi-green-val)) !important; }
+button > .icon-neon-orange { color: hsl(var(--boogasi-orange-val)) !important; }
+button > .icon-neon-blue { color: hsl(var(--boogasi-blue-val)) !important; }
+button > .icon-neon-purple { color: hsl(var(--boogasi-purple-val)) !important; }
+button > .icon-neon-pink { color: hsl(var(--boogasi-pink-val)) !important; }
+button > .icon-neon-cyan { color: hsl(var(--boogasi-cyan-val)) !important; }
+button > .icon-neon-teal { color: hsl(var(--boogasi-teal-val)) !important; }
+button > .icon-neon-yellow { color: hsl(var(--boogasi-yellow-val)) !important; }
+button > .icon-neon-red { color: hsl(var(--boogasi-red-val)) !important; }
+
+.selected-file-icon.icon-neon-green { color: hsl(var(--boogasi-green-val)) !important; }

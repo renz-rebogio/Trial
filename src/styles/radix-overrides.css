@@ -1,0 +1,13 @@
+/* Radix UI Component Overrides */
+.radix-dropdown-menu-content { 
+  @apply bg-popover text-popover-foreground shadow-2xl rounded-xl border border-border glassmorphic-dropdown;
+}
+.radix-dropdown-menu-item {
+  @apply text-sm rounded-md; 
+}
+.radix-dropdown-menu-item:hover, .radix-dropdown-menu-item[data-highlighted] {
+  @apply bg-[hsl(var(--boogasi-cyan)/0.2)] text-boogasi-cyan outline-none; 
+}
+.radix-dropdown-menu-separator {
+  background-color: hsla(var(--border), 0.5); 
+}

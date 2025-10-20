@@ -1,0 +1,28 @@
+{
+  "bank": "HSBC_UK",
+  "statement_type": "bank_statement",
+  "statement_period": "2024-06",
+  "currency": "GBP",
+  "payment_summary": {
+    "openingBalance": 10000,
+    "paymentsIn": 20500,
+    "paymentsOut": 24800,
+    "closingBalance": 5700
+  },
+  "transactions": [
+    {"date": "2024-06-04", "description": "Balance B/F", "amount": 10000, "category": "opening_balance"},
+    {"date": "2024-06-07", "description": "Received from IBMA Credit ", "amount": 2000, "category": "income"},
+    {"date": "2024-06-08", "description": "Payment to Natwest Mtge Payt Debit", "amount": -3000, "category": "housing"},
+    {"date": "2024-06-09", "description": "Payment to PH provident Fund by Draft Debit", "amount": -2000, "category": "transfer_out"},
+    {"date": "2024-06-12", "description": "Direct Debit HSBC USA Debit", "amount": -1000, "category": "bill_payment"},
+    {"date": "2024-06-13", "description": "Received from Microsoft Credit", "amount": 3000, "category": "income"},
+    {"date": "2024-06-15", "description": "Transfer from Sort Code 00-06-23 Credit", "amount": 5000, "category": "transfer_in"},
+    {"date": "2024-06-19", "description": "Payment to Exxon Mobile Unlimited Debit", "amount": -1000, "category": "transportation"},
+    {"date": "2024-06-20", "description": "Received from SL Petroleum Credit", "amount": 5500, "category": "income"},
+    {"date": "2024-06-23", "description": "Payment to Board of Internal Debit", "amount": -5000, "category": "bill_payment"},
+    {"date": "2024-06-25", "description": "Direct Debit HSBC SL Debit", "amount": -10000, "category": "bill_payment"},
+    {"date": "2024-06-26", "description": "Received from Shell BP Credit", "amount": 4000, "category": "income"},
+    {"date": "2024-06-29", "description": "Drawn on Cho No. 434212 Debit", "amount": -2800, "category": "cash_withdrawal"},
+    {"date": "2024-06-28", "description": "Transfer from HSBC UK Credit", "amount": 1000, "category": "transfer_in"}
+  ]
+}

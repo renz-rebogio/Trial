@@ -1,0 +1,19 @@
+{
+  "success": true,
+  "filename": "metrobank_bankstatement.png",
+  "document_type": "bank_statement",
+  "processed_at": "2025-10-19T09:49:45.891576",
+  "data": {
+    "account_info": {},
+    "statement_period": {},
+    "balance": {},
+    "transactions": [],
+    "summary": {
+      "total_transactions": 0,
+      "total_credit": 0,
+      "total_debit": 0,
+      "net_change": 0
+    },
+    "document_type": "bank_statement"
+  }
+}

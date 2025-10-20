@@ -1,0 +1,44 @@
+{
+  "success": true,
+  "filename": "landbank_bank_statement.png",
+  "document_type": "receipt",
+  "processed_at": "2025-10-19T09:49:45.070470",
+  "data": {
+    "merchant_info": {
+      "name": "LANDBANK"
+    },
+    "transaction_info": {},
+    "items": [
+      {
+        "description": "ang",
+        "price": 10030.0
+      },
+      {
+        "description": "‘Transfer ftom BankNet Pb",
+        "price": 9523008.0
+      },
+      {
+        "description": "Spotity 1 week subscription",
+        "price": 6268800.0
+      },
+      {
+        "description": "Vian Transfer from",
+        "price": 10275608090.0
+      },
+      {
+        "description": "Google Play ME, Subs",
+        "price": 69121620.0
+      },
+      {
+        "description": "‘Transfer to Bank No.",
+        "price": 9618.0
+      },
+      {
+        "description": "Transfer to Bank No,",
+        "price": 8130.0
+      }
+    ],
+    "totals": {},
+    "document_type": "receipt"
+  }
+}

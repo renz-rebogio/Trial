@@ -1,0 +1,26 @@
+{
+  "bank": "HSBC_UK",
+  "statement_type": "bank_statement",
+  "statement_period": "2024-06",
+  "currency": "GBP",
+  "payment_summary": {
+    "openingBalance": 4247.14,
+    "paymentsIn": 85.15,
+    "paymentsOut": 548.93,
+    "closingBalance": 3783.36
+  },
+  "transactions": [
+    {"date": "2024-06-15", "description": "Opening balance", "amount": 4247.14, "category": "opening_balance"},
+    {"date": "2024-06-15", "description": "Transfer", "amount": 85, "category": "transfer_in"},
+    {"date": "2024-06-15", "description": "Interest paid", "amount": 0.15, "category": "income"},
+    {"date": "2024-06-15", "description": "ATM Withdrawal", "amount": -100, "category": "cash_withdrawal"},
+    {"date": "2024-06-15", "description": "Interac purchase -1361 - Nasr Foods Inc.", "amount": -47.82, "category": "groceries"},
+    {"date": "2024-06-17", "description": "Overdraft interest", "amount": -0.93, "category": "bill_payment"},
+    {"date": "2024-06-18", "description": "Cheque #30", "amount": -40, "category": "bill_payment"},
+    {"date": "2024-06-18", "description": "Cheque #31", "amount": -148.11, "category": "bill_payment"},
+    {"date": "2024-06-23", "description": "ATM Withdrawal", "amount": -60, "category": "cash_withdrawal"},
+    {"date": "2024-06-24", "description": "ATM Withdrawal", "amount": -20, "category": "cash_withdrawal"},
+    {"date": "2024-06-24", "description": "Interac purchase -1361 - The Bay", "amount": -125.13, "category": "shopping"},
+    {"date": "2024-06-24", "description": "Interac purchase -1361 - Highland Farms", "amount": -6.94, "category": "groceries"}
+  ]
+}

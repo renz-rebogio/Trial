@@ -1,0 +1,39 @@
+{
+  "success": true,
+  "filename": "receipt1.png",
+  "document_type": "receipt",
+  "processed_at": "2025-10-19T09:49:47.527526",
+  "data": {
+    "merchant_info": {
+      "name": "TARGET."
+    },
+    "transaction_info": {
+      "date": "3/12/2025",
+      "time": "12:28:54 PM"
+    },
+    "items": [
+      {
+        "description": "SACRAMENTO CA",
+        "price": 28856.0
+      },
+      {
+        "description": "ST#",
+        "price": 1234.0
+      },
+      {
+        "description": "1 ALIBEISS CLEANING WIPES",
+        "price": 8899.0
+      },
+      {
+        "description": "Tc#",
+        "price": 4891.0
+      }
+    ],
+    "totals": {
+      "subtotal": 8899.0,
+      "tax": 72.0,
+      "total": 8899.0
+    },
+    "document_type": "receipt"
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "bank": "HSBC_UK",
+  "statement_type": "bank_statement",
+  "statement_period": "2023-11",
+  "currency": "GBP",
+  "payment_summary": {
+    "openingBalance": 0.57,
+    "paymentsIn": 3142.37,
+    "paymentsOut": 1003.10,
+    "closingBalance": 2139.27
+  },
+  "transactions": [
+    {
+      "date": "2023-11-24",
+      "description": "BALANCE BROUGHT FORWARD",
+      "amount": 0.57,
+      "category": "opening_balance"
+    },
+    {
+      "date": "2023-11-25",
+      "description": "CR Transfer",
+      "amount": 2212.14,
+      "category": "transfer_in"
+    },
+    {
+      "date": "2023-11-26",
+      "description": "BP Telephone Bill Payment MASTERCARD",
+      "amount": -60,
+      "category": "utilities"
+    },
+    {
+      "date": "2023-11-27",
+      "description": "DHL delivery services",
+      "amount": -30.50,
+      "category": "shopping"
+    },
+    {
+      "date": "2023-12-28",
+      "description": "CR Cheque Deposit",
+      "amount": 425.23,
+      "category": "income"
+    },
+    {
+      "date": "2023-11-29",
+      "description": "CR Jessica George",
+      "amount": 500,
+      "category": "transfer_in"
+    },
+    {
+      "date": "2023-11-29",
+      "description": "BP Shell 2-4NEW CROSS ROAD",
+      "amount": -202.34,
+      "category": "transportation"
+    },
+    {
+      "date": "2023-11-29",
+      "description": "BP Pizza Union Hoxton",
+      "amount": -15.13,
+      "category": "dining"
+    },
+    {
+      "date": "2023-11-30",
+      "description": "BP Uber",
+      "amount": -28.90,
+      "category": "transportation"
+    },
+    {
+      "date": "2023-12-01",
+      "description": "BP British Gas Payment",
+      "amount": -659.23,
+      "category": "utilities"
+    },
+    {
+      "date": "2023-12-02",
+      "description": "BP Costa Coffee",
+      "amount": -7,
+      "category": "dining"
+    }
+  ]
+}

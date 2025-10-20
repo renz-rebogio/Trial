@@ -1,0 +1,71 @@
+{
+  "success": true,
+  "filename": "bdo_dummy_bank_statement.jpg",
+  "document_type": "receipt",
+  "processed_at": "2025-10-19T09:49:37.902350",
+  "data": {
+    "merchant_info": {
+      "name": "John Doe"
+    },
+    "transaction_info": {},
+    "items": [
+      {
+        "description": "Balance P",
+        "price": 248.36
+      },
+      {
+        "description": "Withdrawals P",
+        "price": 28700.0
+      },
+      {
+        "description": "Devos P",
+        "price": 28948.36
+      },
+      {
+        "description": "October",
+        "price": 252023.0
+      },
+      {
+        "description": "For Sep 10- Oct 25,",
+        "price": 2023.0
+      },
+      {
+        "description": "8,717.00 P",
+        "price": 8717.0
+      },
+      {
+        "description": "7,076.73 P |",
+        "price": 7093.73
+      },
+      {
+        "description": "5,",
+        "price": 80.73
+      },
+      {
+        "description": "5,",
+        "price": 174.46
+      },
+      {
+        "description": "8,073.90 P | 8,",
+        "price": 248.36
+      },
+      {
+        "description": "October",
+        "price": 252023.0
+      },
+      {
+        "description": "San Pablo City",
+        "price": 4000.0
+      },
+      {
+        "description": "Tel +632",
+        "price": 8840.0
+      }
+    ],
+    "totals": {
+      "subtotal": 248.36,
+      "total": 248.36
+    },
+    "document_type": "receipt"
+  }
+}

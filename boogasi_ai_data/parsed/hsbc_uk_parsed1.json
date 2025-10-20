@@ -1,0 +1,27 @@
+{
+  "bank": "HSBC UK",
+  "statement_period": "15 October 2020 - 14 November 2020",
+  "payment_summary": {
+    "openingBalance": 9820,
+    "paymentsIn": 9803.54,
+    "paymentsOut": 17.03,
+    "closingBalance": 17.03
+  },
+  "transactions": [
+    {
+      "date": "2020-10-15",
+      "description": "BP C Florea Vietor Popa",
+      "amount": 1900
+    },
+    {
+      "date": "2020-10-16",
+      "description": "BP V Birca",
+      "amount": -1710
+    },
+    {
+      "date": "2020-10-21",
+      "description": "BP Victor Popa Oct 20 BP D Chitan Oct 20 BP Victor Spinei BP Victor Popa BP Victor Spinei CR Victor Popa",
+      "amount": 70
+    }
+  ]
+}

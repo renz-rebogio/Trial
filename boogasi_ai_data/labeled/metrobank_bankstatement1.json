@@ -1,0 +1,86 @@
+{
+  "bank": "METROBANK",
+  "statement_type": "bank_statement",
+  "statement_period": "2024-03",
+  "currency": "PHP",
+  "payment_summary": {
+    "openingBalance": 650273.39,
+    "paymentsIn": 110000,
+    "paymentsOut": 100107,
+    "closingBalance": 660166.39
+  },
+  "transactions": [
+    {
+      "date": "2024-03-02",
+      "description": "Previous balance",
+      "amount": 650273.39,
+      "category": "opening_balance"
+    },
+    {
+      "date": "2024-03-02",
+      "description": "water bill",
+      "amount": -1075.99,
+      "category": "utilities"
+    },
+    {
+      "date": "2024-03-05",
+      "description": "rent bill",
+      "amount": -20253.68,
+      "category": "housing"
+    },
+    {
+      "date": "2024-03-06",
+      "description": "Check No. 459",
+      "amount": 42756.84,
+      "category": "income"
+    },
+    {
+      "date": "2024-03-10",
+      "description": "Deposit from Credit Card Processor",
+      "amount": 15891.87,
+      "category": "income"
+    },
+    {
+      "date": "2024-03-12",
+      "description": "PayrollRun",
+      "amount": -30894.75,
+      "category": "payroll"
+    },
+    {
+      "date": "2024-03-16",
+      "description": "Main Office Wholesale",
+      "amount": -24336,
+      "category": "business_expense"
+    },
+    {
+      "date": "2024-03-16",
+      "description": "Main Office Wholesale",
+      "amount": -1750,
+      "category": "business_expense"
+    },
+    {
+      "date": "2024-03-21",
+      "description": "Check No. 234",
+      "amount": 20694.84,
+      "category": "income"
+    },
+    {
+      "date": "2024-03-26",
+      "description": "Payroll Run",
+      "amount": -3743.23,
+      "category": "payroll"
+    },
+    {
+      "date": "2024-03-28",
+      "description": "Payment From Mark More",
+      "amount": 30656.45,
+      "category": "income"
+    },
+    {
+      "date": "2024-03-29",
+      "description": "Debit Transaction",
+      "amount": -18053.35,
+      "category": "transfer_out"
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "bank": "HSBC_UK",
+  "statement_type": "bank_statement",
+  "statement_period": "2020-10",
+  "currency": "GBP",
+  "payment_summary": {
+    "openingBalance": 9820,
+    "paymentsIn": 9803.54,
+    "paymentsOut": 17.03,
+    "closingBalance": 17.03
+  },
+  "transactions": [
+    {
+      "date": "2020-10-14",
+      "description": "BALANCE BROUGHT FORWARD",
+      "amount": 0.57,
+      "category": "opening_balance"
+    },
+    {
+      "date": "2020-10-15",
+      "description": "BP GBCLONLTD construction",
+      "amount": 9000,
+      "category": "income"
+    },
+    {
+      "date": "2020-10-15",
+      "description": "BP C Florea For help Victor Popa",
+      "amount": -1225,
+      "category": "transfer_out"
+    },
+    {
+      "date": "2020-10-15",
+      "description": "For my",
+      "amount": -1900,
+      "category": "transfer_out"
+    },
+    {
+      "date": "2020-10-16",
+      "description": "BP V Diminet For help",
+      "amount": -1710,
+      "category": "transfer_out"
+    },
+    {
+      "date": "2020-10-16",
+      "description": "BP V Birca Fie felp",
+      "amount": -600,
+      "category": "transfer_out"
+    },
+    {
+      "date": "2020-10-16",
+      "description": "BP G Grajdean For help",
+      "amount": -1000,
+      "category": "transfer_out"
+    },
+    {
+      "date": "2020-10-21",
+      "description": "BP C Florea For rent",
+      "amount": -300,
+      "category": "housing"
+    },
+    {
+      "date": "2020-10-21",
+      "description": "BP Victor Popa",
+      "amount": -265,
+      "category": "transfer_out"
+    },
+    {
+      "date": "2020-10-22",
+      "description": "BP D CHITAN Gift",
+      "amount": -560,
+      "category": "transfer_out"
+    },
+    {
+      "date": "2020-10-25",
+      "description": "BP Victor Spinei For help",
+      "amount": -360,
+      "category": "transfer_out"
+    },
+    {
+      "date": "2020-10-25",
+      "description": "BP Victor Popa For my",
+      "amount": -500,
+      "category": "transfer_out"
+    },
+    {
+      "date": "2020-10-25",
+      "description": "BP Victor Spinei For help",
+      "amount": -60,
+      "category": "transfer_out"
+    },
+    {
+      "date": "2020-10-25",
+      "description": "BP Victor Popa For my",
+      "amount": 70,
+      "category": "transfer_in"
+    }
+  ]
+}

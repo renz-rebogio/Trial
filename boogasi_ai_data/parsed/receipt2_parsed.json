@@ -1,0 +1,38 @@
+{
+  "success": true,
+  "filename": "receipt2.png",
+  "document_type": "receipt",
+  "processed_at": "2025-10-19T09:49:48.334844",
+  "data": {
+    "merchant_info": {
+      "name": "QuickStop Market"
+    },
+    "transaction_info": {
+      "date": "9/30/2025",
+      "time": "6:10:37 PM"
+    },
+    "items": [
+      {
+        "description": "2 Bottled Water (500m1)",
+        "price": 300.0
+      },
+      {
+        "description": "Card number AK eK kA",
+        "price": 4922.0
+      },
+      {
+        "description": "Reference #",
+        "price": 6.284528926024624e+19
+      },
+      {
+        "description": "(303)",
+        "price": 555.0
+      }
+    ],
+    "totals": {
+      "subtotal": 1450.0,
+      "total": 1450.0
+    },
+    "document_type": "receipt"
+  }
+}

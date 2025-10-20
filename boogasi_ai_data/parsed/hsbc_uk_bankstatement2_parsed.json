@@ -1,0 +1,29 @@
+{
+  "success": true,
+  "filename": "hsbc_uk_bankstatement2.png",
+  "document_type": "bank_statement",
+  "processed_at": "2025-10-19T09:49:44.187794",
+  "data": {
+    "account_info": {},
+    "statement_period": {},
+    "balance": {
+      "beginning": 0.57,
+      "ending": 2.0
+    },
+    "transactions": [
+      {
+        "date": "2-4",
+        "description": "NEW CROSS ROAD",
+        "amount": -202.34,
+        "category": "transportation"
+      }
+    ],
+    "summary": {
+      "total_transactions": 1,
+      "total_credit": 0,
+      "total_debit": 202.34,
+      "net_change": -202.34
+    },
+    "document_type": "bank_statement"
+  }
+}

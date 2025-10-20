@@ -1,0 +1,51 @@
+{
+  "success": true,
+  "filename": "receipt3.jpg",
+  "document_type": "receipt",
+  "processed_at": "2025-10-19T09:49:46.830187",
+  "data": {
+    "merchant_info": {
+      "name": "Hotel Restaurant and Bar"
+    },
+    "transaction_info": {
+      "date": "09/25/2020",
+      "time": "12:54PM"
+    },
+    "items": [
+      {
+        "description": "Tel:",
+        "price": 650.0
+      },
+      {
+        "description": "Hendrick Gin & Tonic",
+        "price": 10.5
+      },
+      {
+        "description": "Ginger Mule",
+        "price": 9.5
+      },
+      {
+        "description": "Glass Camus Zin",
+        "price": 24.0
+      },
+      {
+        "description": "Titos Vodka Soda",
+        "price": 12.0
+      },
+      {
+        "description": "Amount",
+        "price": 60.76
+      },
+      {
+        "description": "BALANCE",
+        "price": 60.76
+      }
+    ],
+    "totals": {
+      "subtotal": 56.0,
+      "tax": 4.76,
+      "total": 56.0
+    },
+    "document_type": "receipt"
+  }
+}

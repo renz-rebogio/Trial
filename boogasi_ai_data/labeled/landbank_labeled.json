@@ -1,0 +1,86 @@
+{
+  "bank": "METROBANK",
+  "statement_type": "bank_statement",
+  "statement_period": "2024-01",
+  "currency": "PHP",
+  "payment_summary": {
+    "openingBalance": 328526.50,
+    "paymentsIn": 17500.20,
+    "paymentsOut": 39369.22,
+    "closingBalance": 289157.28
+  },
+  "transactions": [
+    {
+      "date": "2024-01-23",
+      "description": "Google Play Store Subscription",
+      "amount": -499,
+      "category": "entertainment"
+    },
+    {
+      "date": "2024-01-23",
+      "description": "G-Exchange/Gcash Transfer 02661",
+      "amount": -5280,
+      "category": "transfer_out"
+    },
+    {
+      "date": "2024-01-23",
+      "description": "Transfer from BankNet Ph 09523008",
+      "amount": 10650,
+      "category": "transfer_in"
+    },
+    {
+      "date": "2024-01-24",
+      "description": "Spotify 1 week subscription 6288400",
+      "amount": -109,
+      "category": "entertainment"
+    },
+    {
+      "date": "2024-01-24",
+      "description": "Visa Transfer from 10275608090 Jonas Villasis 0019",
+      "amount": 850.20,
+      "category": "transfer_in"
+    },
+    {
+      "date": "2024-01-25",
+      "description": "Google Play ML Subs 0069121620",
+      "amount": -99,
+      "category": "entertainment"
+    },
+    {
+      "date": "2024-01-26",
+      "description": "Cash-in from Pay&Go 1096305102327",
+      "amount": 6000,
+      "category": "transfer_in"
+    },
+    {
+      "date": "2024-01-27",
+      "description": "Card Withdrawal 99691100690-119",
+      "amount": -10550,
+      "category": "cash_withdrawal"
+    },
+    {
+      "date": "2024-01-27",
+      "description": "Netflix Subscription Payment",
+      "amount": -149,
+      "category": "entertainment"
+    },
+    {
+      "date": "2024-01-27",
+      "description": "Transfer to Bank No. 9618 ends.",
+      "amount": -25321.42,
+      "category": "transfer_out"
+    },
+    {
+      "date": "2024-01-27",
+      "description": "Transfer to Bank No. 8130 ends.",
+      "amount": -5200,
+      "category": "transfer_out"
+    },
+    {
+      "date": "2024-01-29",
+      "description": "Debit card withdrawal Trans No. 06981218632001",
+      "amount": -9860,
+      "category": "cash_withdrawal"
+    }
+  ]
+}
