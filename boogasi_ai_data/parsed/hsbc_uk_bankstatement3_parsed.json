@@ -2,7 +2,7 @@
   "success": true,
   "filename": "hsbc_uk_bankstatement3.jpg",
   "document_type": "bank_statement",
-  "processed_at": "2025-10-19T09:49:41.180819",
+  "processed_at": "2025-10-22T02:09:12.018572",
   "data": {
     "account_info": {},
     "statement_period": {},
@@ -12,9 +12,10 @@
     },
     "transactions": [
       {
-        "date": "00-06-23",
+        "date": "00/06/23",
         "description": "Credit",
         "amount": 5000.0,
+        "type": "income",
         "category": "transfer_in"
       }
     ],

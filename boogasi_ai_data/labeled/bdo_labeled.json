@@ -13,49 +13,57 @@
       "date": "2023-09-10",
       "description": "Fund Transfer",
       "amount": 8717,
-      "category": "transfer_in"
+      "category": "transfer_in",
+      "type": "income"
     },
     {
       "date": "2023-09-10",
       "description": "ATM Withdrawal",
       "amount": -8700,
-      "category": "cash_withdrawal"
+      "category": "cash_withdrawal",
+      "type": "expense"
     },
     {
       "date": "2023-09-25",
       "description": "Fund Transfer",
       "amount": 7076.73,
-      "category": "transfer_in"
+      "category": "transfer_in",
+      "type": "income"
     },
     {
       "date": "2023-09-25",
       "description": "ATM Withdrawal",
       "amount": -7000,
-      "category": "cash_withdrawal"
+      "category": "cash_withdrawal",
+      "type": "expense"
     },
     {
       "date": "2023-10-10",
       "description": "Fund Transfer",
       "amount": 5080.73,
-      "category": "transfer_in"
+      "category": "transfer_in",
+      "type": "income"
     },
     {
       "date": "2023-10-10",
       "description": "ATM Withdrawal",
       "amount": -5000,
-      "category": "cash_withdrawal"
+      "category": "cash_withdrawal",
+      "type": "expense"
     },
     {
       "date": "2023-10-25",
       "description": "Fund Transfer",
       "amount": 8073.9,
-      "category": "transfer_in"
+      "category": "transfer_in",
+      "type": "income"
     },
     {
       "date": "2023-10-25",
       "description": "ATM Withdrawal",
       "amount": -8000,
-      "category": "cash_withdrawal"
+      "category": "cash_withdrawal",
+      "type": "expense"
     }
   ]
 }

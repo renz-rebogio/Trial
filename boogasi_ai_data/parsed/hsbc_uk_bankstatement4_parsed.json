@@ -1,54 +1,21 @@
 {
   "success": true,
   "filename": "hsbc_uk_bankstatement4.jpg",
-  "document_type": "receipt",
-  "processed_at": "2025-10-19T09:49:42.531030",
+  "document_type": "bank_statement",
+  "processed_at": "2025-10-22T02:09:13.122447",
   "data": {
-    "merchant_info": {
-      "name": "HSBC arma ren"
+    "account_info": {
+      "account_number": "99678268"
     },
-    "transaction_info": {
-      "date": "40-70-80"
+    "statement_period": {},
+    "balance": {},
+    "transactions": [],
+    "summary": {
+      "total_transactions": 0,
+      "total_credit": 0,
+      "total_debit": 0,
+      "net_change": 0
     },
-    "items": [
-      {
-        "description": "cyano. 1s Gn 00",
-        "price": 19715.0
-      },
-      {
-        "description": "Your opening balance on Jun 15,",
-        "price": 2024.0
-      },
-      {
-        "description": "Your account number:",
-        "price": 99678268.0
-      },
-      {
-        "description": "‘Your closing balance on jun",
-        "price": 242024.0
-      },
-      {
-        "description": "15.Jun",
-        "price": 8500.0
-      },
-      {
-        "description": "Interac purchase",
-        "price": 1361.0
-      },
-      {
-        "description": "17Jun Overdraft interest",
-        "price": 4183.54
-      },
-      {
-        "description": "Interac purchase -",
-        "price": 1361.0
-      },
-      {
-        "description": "interac purchase",
-        "price": 1361.0
-      }
-    ],
-    "totals": {},
-    "document_type": "receipt"
+    "document_type": "bank_statement"
   }
 }

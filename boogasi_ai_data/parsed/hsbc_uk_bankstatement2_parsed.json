@@ -2,7 +2,7 @@
   "success": true,
   "filename": "hsbc_uk_bankstatement2.png",
   "document_type": "bank_statement",
-  "processed_at": "2025-10-19T09:49:44.187794",
+  "processed_at": "2025-10-22T02:09:14.504282",
   "data": {
     "account_info": {},
     "statement_period": {},
@@ -12,9 +12,10 @@
     },
     "transactions": [
       {
-        "date": "2-4",
+        "date": "2/4",
         "description": "NEW CROSS ROAD",
-        "amount": -202.34,
+        "amount": 202.34,
+        "type": "expense",
         "category": "transportation"
       }
     ],

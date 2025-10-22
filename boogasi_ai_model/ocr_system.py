@@ -257,23 +257,32 @@ class DocumentClassifier:
             return 'unknown'
         text_lower = text.lower()
         
+        # Strong bank signals: explicit "statement", account masks (****1234), or "acct"/"account"
+        if 'statement' in text_lower:
+            return 'bank_statement'
+        if re.search(r'\*{2,}\d{2,4}', text):  # masked account like ****1234
+            return 'bank_statement'
+        if re.search(r'\b(account|acct|a/c|account number|account no)\b', text_lower):
+            return 'bank_statement'
+        
         bank_score = sum(1 for keyword in self.bank_keywords if keyword in text_lower)
         receipt_score = sum(1 for keyword in self.receipt_keywords if keyword in text_lower)
         
-        # Heuristic: receipts often contain 'total' and multiple currency-looking values
+        # Heuristic: receipts often contain 'total' and currency values
         currency_amounts = len([m for m in re.findall(r'[₱$]\s*[\d,]+\.\d{2}', text)])
         currency_like_numbers = len([m for m in re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d{2})\b', text)])
         receipt_density = receipt_score + (1 if 'total' in text_lower else 0) + (1 if currency_amounts >= 1 else 0)
         
-        # Lower thresholds for receipts (they are shorter and noisier)
-        if receipt_density >= 2 or (receipt_score >= 2 and receipt_score > bank_score):
+        # Receipt detection: require stronger evidence (receipt keywords + currency density)
+        if receipt_density >= 2 and receipt_score >= bank_score:
             return 'receipt'
-        if bank_score >= 2 and bank_score > receipt_score:
+        
+        # Bank detection: if bank keywords outweight receipts
+        if bank_score >= 1 and bank_score >= receipt_score:
             return 'bank_statement'
         
-        # Additional fallback: if many currency-like numbers but no long-run 'statement' keywords,
-        # treat as receipt (common for printed receipts)
-        if currency_like_numbers >= 2 and 'statement' not in text_lower and receipt_score >= 1:
+        # Fallback: many currency-like numbers but no 'statement' could be a receipt
+        if currency_like_numbers >= 3 and receipt_score >= 1:
             return 'receipt'
         
         return 'unknown'
@@ -282,10 +291,33 @@ class DocumentClassifier:
 class BankStatementParser:
     """Parses bank statements from extracted text."""
     
-    def __init__(self):
-        self.merchant_categories = {}
-        self.category_patterns = {}
-    
+    def __init__(self, learned_patterns=None, model_artifacts=None):
+        self.patterns = learned_patterns or {}
+        self.model = None
+        if model_artifacts:
+            try:
+                with open(model_artifacts) as f:
+                    self.model = json.load(f)
+            except Exception:
+                pass
+
+    def categorize_transaction(self, description):
+        """Use learned patterns to categorize transaction"""
+        desc = description.lower()
+        
+        # Check merchant categories first
+        for merchant, category in self.patterns.get('merchant_categories', {}).items():
+            if merchant.lower() in desc:
+                return category
+                
+        # Try pattern matching
+        for category, patterns in self.patterns.get('category_patterns', {}).items():
+            for pattern in patterns:
+                if pattern.lower() in desc:
+                    return category
+        
+        return "uncategorized"
+
     def load_learned_patterns(self, patterns_file: str):
         """Load previously learned categorization patterns."""
         try:
@@ -554,6 +586,25 @@ class BoogasiOCRSystem:
         print("🚀 BOOGASI OCR SYSTEM INITIALIZED")
         print("="*60)
     
+    def _normalize_date(self, date_str: str) -> str:
+        """Try to convert common date formats to YYYY-MM-DD. If fail, return original."""
+        if not date_str:
+            return ""
+        date_str = date_str.strip().replace('.', '/').replace('-', '/')
+        formats = ['%m/%d/%Y', '%m/%d/%y', '%d/%m/%Y', '%d/%m/%y', '%Y/%m/%d', '%Y-%m-%d']
+        from datetime import datetime
+        for fmt in formats:
+            try:
+                dt = datetime.strptime(date_str, fmt)
+                return dt.strftime('%Y-%m-%d')
+            except Exception:
+                continue
+        # Try to extract yyyy-mm-dd inside the string
+        m = re.search(r'(\d{4}-\d{2}-\d{2})', date_str)
+        if m:
+            return m.group(1)
+        return date_str  # as-is if not parseable
+    
     def process_document(self, file_path: str, save_output: bool = True) -> Dict:
         """
         Process any financial document (bank statement or receipt).
@@ -591,6 +642,47 @@ class BoogasiOCRSystem:
                 "error": "Could not determine document type",
                 "raw_text": text
             }
+        
+        # --- NORMALIZE TRANSACTIONS to the requested schema ---
+        normalized_transactions = []
+        
+        if parsed_data.get('document_type') == 'bank_statement':
+            for txn in parsed_data.get('transactions', []):
+                date_norm = self._normalize_date(txn.get('date', ''))
+                amount_raw = txn.get('amount', 0.0)
+                # amount in bank parser uses negative for debits
+                txn_type = 'income' if amount_raw > 0 else 'expense'
+                amount = abs(float(amount_raw))
+                category = txn.get('category') or self.bank_parser.categorize_transaction(txn.get('description', ''))
+                
+                normalized_transactions.append({
+                    "date": date_norm,
+                    "description": txn.get('description', '').strip(),
+                    "amount": round(amount, 2),
+                    "type": txn_type,
+                    "category": category or "uncategorized"
+                })
+        
+        elif parsed_data.get('document_type') == 'receipt':
+            date_raw = parsed_data.get('transaction_info', {}).get('date', '')
+            date_norm = self._normalize_date(date_raw)
+            for item in parsed_data.get('items', []):
+                desc = item.get('description', '').strip()
+                amt = float(item.get('price', 0.0))
+                # receipts are typically expenses unless flagged as refund/credit
+                r_type = 'income' if any(w in desc.lower() for w in ['refund', 'credit', 'reversal']) else 'expense'
+                category = self.bank_parser.categorize_transaction(desc)
+                
+                normalized_transactions.append({
+                    "date": date_norm,
+                    "description": desc,
+                    "amount": round(amt, 2),
+                    "type": r_type,
+                    "category": category or "uncategorized"
+                })
+        
+        # Attach normalized transactions in a consistent place
+        parsed_data['transactions'] = normalized_transactions
         
         # Add metadata
         result = {

@@ -1,6 +1,9 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { boogasiAI } from "@/lib/ai/boogasiAiClient";
 import { motion } from "framer-motion";
+import { AlertCircle, UploadCloud } from "lucide-react";
+
+// Components
+import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import AIAssistantHeader from "@/components/ai/AIAssistantHeader";
 import FileDataInput from "@/components/ai/FileDataInput";
@@ -8,15 +11,28 @@ import AIAnalysisActions from "@/components/ai/AIAnalysisActions";
 import AIHowItWorks from "@/components/ai/AIHowItWorks";
 import AIFinanceAssistantDisclaimer from "@/components/ai/AIFinanceAssistantDisclaimer";
 import DataPrivacyNotice from "@/components/ai/DataPrivacyNotice";
+import AIInsightsDisplay from "@/components/ai/AIInsightsDisplay";
+
+// Services & Hooks
+import { useAuth } from "@/hooks/useAuth";
+import { boogasiAI } from "@/lib/ai/boogasiAiClient";
+import { ocrImageAndParseTransactions } from "@/lib/ocrService";
 import {
   simulateAIDocumentProcessing,
   simulateFinancialAnalysis,
   simulatePortfolioAction,
 } from "@/lib/aiSimulation";
-import { ocrImageAndParseTransactions } from "@/lib/ocrService";
-import { useAuth } from "@/hooks/useAuth";
-import { AlertCircle, UploadCloud } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { getAIInsights } from "@/services/aiInsightsService";
+
+// Constants
+const API_URL = "http://localhost:8000";
+const FEATURES = {
+  EXPENSE_SUMMARY: "expense_summary",
+  CASH_FLOW: "cash_flow_forecast",
+  UNUSUAL_TRANSACTIONS: "flag_unusual_transactions",
+  WEEKLY_REPORT: "weekly_report",
+  COMBINED: "combined_insights",
+};
 
 const MAX_FILES = 10;
 const MAX_FILE_SIZE_MB = 5;
@@ -42,7 +58,7 @@ const AIAssistantPage = () => {
   const { user } = useAuth();
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [manualTransactions, setManualTransactions] = useState("");
-  const [analysisResult, setAnalysisResult] = useState("");
+  const [analysisResult, setAnalysisResult] = useState(null);
   const [portfolioFeaturesResult, setPortfolioFeaturesResult] = useState("");
   const [ocrProcessedData, setOcrProcessedData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -51,6 +67,7 @@ const AIAssistantPage = () => {
 
   // Add this line for the AI toggle state
   const [useAI, setUseAI] = useState(false);
+  const [apiError, setApiError] = useState(null);
 
   useEffect(() => {
     if (user && user.user_metadata) {
@@ -258,157 +275,154 @@ const AIAssistantPage = () => {
     [selectedFiles, toast]
   );
 
-  const handleAIRequest = async (action) => {
+  const callAIInsights = async (transactions, feature) => {
+    try {
+      const response = await fetch(`${API_URL}/api/insights`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          transactions,
+          feature,
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.detail || "Failed to get insights");
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error("AI Insights Error:", error);
+      setApiError(error.message);
+      throw error;
+    }
+  };
+
+  const handleAnalyzeClick = async () => {
     setIsLoading(true);
-    setAnalysisResult("");
-    setPortfolioFeaturesResult("");
-    setLoadingMessage("Boogasi AI is configuring & processing your data...");
+    setApiError(null);
 
     try {
-      const allExtractedTransactions = selectedFiles.reduce((acc, file) => {
-        const ocrFileResult = ocrProcessedData[file.name];
-        if (
-          ocrFileResult &&
-          ocrFileResult.formattedTransactions &&
-          ocrFileResult.formattedTransactions.length > 0
-        ) {
-          return acc.concat(
-            ocrFileResult.formattedTransactions.map((tx) => ({
-              ...tx,
-              sourceFile: file.name,
-            }))
-          );
-        }
-        return acc;
-      }, []);
+      // Get transactions from your OCR data or manual input
+      const transactions = ocrProcessedData?.transactions || [];
 
-      const fileDetailsForSimLog = selectedFiles.map((file) => {
-        const ocrData = ocrProcessedData[file.name];
+      // Call the AI insights API
+      const result = await callAIInsights(transactions, FEATURES.COMBINED);
+
+      // Update UI with results
+      setAnalysisResult(JSON.stringify(result, null, 2));
+
+      toast({
+        title: "Analysis Complete",
+        description: "AI insights are ready to view",
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Analysis Failed",
+        description: error.message,
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleAIRequest = async (action) => {
+    setIsLoading(true);
+    setLoadingMessage("Analyzing your data...");
+
+    try {
+      // Map action names to API feature types
+      const featureMap = {
+        "Analyze Expenses": "expense_summary",
+        "Forecast Cash Flow": "cash_flow_forecast",
+        "Flag Unusual Transactions": "flag_unusual_transactions",
+        "Generate Weekly Report": "weekly_report",
+        "Combined Analysis": "combined_insights",
+      };
+
+      const feature = featureMap[action];
+      if (!feature) {
+        throw new Error(`Unknown action: ${action}`);
+      }
+
+      const transactions = Object.values(ocrProcessedData || {})
+        .flatMap((r) => r?.formattedTransactions || [])
+        .filter(
+          (tx) =>
+            tx &&
+            (tx.date || tx.description) &&
+            typeof tx.amount !== "undefined"
+        );
+
+      // Normalize transactions
+      const normalizedTransactions = transactions.map((tx) => {
+        const amount =
+          typeof tx.amount === "string"
+            ? parseFloat(tx.amount.replace(/[,₱\s]/g, ""))
+            : Number(tx.amount || 0);
         return {
-          name: file.name,
-          type: file.type,
-          ocrRawText: ocrData?.rawText || null,
-          ocrFormattedTransactions: ocrData?.formattedTransactions || [],
-          ocrError: ocrData?.error || null,
+          ...tx,
+          amount: Number.isNaN(amount) ? 0 : amount,
+          type: amount < 0 ? "expense" : "income",
+          category: tx.category || tx.description || "other",
         };
       });
 
-      let docProcessingLogResult = simulateAIDocumentProcessing(
-        fileDetailsForSimLog,
-        ocrProcessedData,
-        userName
+      console.log(
+        "[AI] Normalized transactions:",
+        normalizedTransactions.slice(0, 3)
       );
-      let docProcessingLog = docProcessingLogResult.reportContent;
 
-      const isPortfolioAction = [
-        "Track Contributions",
-        "Rebalance Reminders",
-        "Portfolio Performance",
-        "Goal Progress",
-        "Smart Alerts",
-      ].includes(action);
+      const result = await getAIInsights(normalizedTransactions, feature);
+      const uiResult = {
+        feature,
+        data: result,
+        transactions: normalizedTransactions,
+      };
 
-      let allInputTextForSim = manualTransactions.trim();
-      fileDetailsForSimLog.forEach((detail) => {
-        if (detail.ocrRawText && !detail.ocrError) {
-          allInputTextForSim += `\n\n--- OCR Raw Content from ${detail.name} ---\n${detail.ocrRawText}`;
-        }
-        if (detail.ocrFormattedTransactions.length > 0) {
-          allInputTextForSim += `\n\n--- Formatted Transactions from ${
-            detail.name
-          } ---\n${JSON.stringify(detail.ocrFormattedTransactions, null, 2)}`;
-        }
-        if (detail.ocrError) {
-          allInputTextForSim += `\n\n--- OCR Error for ${detail.name} ---\n${detail.ocrError}`;
-        }
-      });
+      setAnalysisResult(uiResult);
 
-      const hasValidInputData =
-        allExtractedTransactions.length > 0 ||
-        manualTransactions.trim().length > 0;
-
-      if (action === "Combined Analysis") {
-        if (!hasValidInputData) {
-          setAnalysisResult(
-            docProcessingLog +
-              "\nNo valid transaction data found from OCR or manual input for combined analysis. Please check file uploads and OCR results."
-          );
-          toast({
-            variant: "destructive",
-            title: "No Data",
-            description: "No valid data for combined analysis.",
-          });
-          return;
-        }
-        let combinedResult = docProcessingLog;
-        const actionsToCombine = [
-          "Analyze Expenses",
-          "Forecast Cash Flow",
-          "Flag Unusual Transactions",
-          "Generate Weekly Report",
-        ];
-        for (const subAction of actionsToCombine) {
-          setLoadingMessage(`Boogasi AI is working on: ${subAction}...`);
-          await new Promise((resolve) => setTimeout(resolve, 1000));
-          const singleActionResult = simulateFinancialAnalysis(
-            subAction,
-            userName,
-            "general",
-            allInputTextForSim,
-            allExtractedTransactions
-          );
-          combinedResult += `\n\n--- ${subAction} ---\n${singleActionResult}`;
-        }
-        setAnalysisResult(combinedResult);
-      } else if (isPortfolioAction) {
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-        const portfolioResult = simulatePortfolioAction(action, userName);
-        setPortfolioFeaturesResult(docProcessingLog + portfolioResult);
-      } else {
-        if (!hasValidInputData && action !== "Get Investment Suggestions") {
-          setAnalysisResult(
-            docProcessingLog +
-              `\nNo valid transaction data found from OCR or manual input for "${action}". Please check file uploads and OCR results.`
-          );
-          toast({
-            variant: "destructive",
-            title: "No Data",
-            description: `No valid data for ${action}.`,
-          });
-          return;
-        }
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-        const financialResult = simulateFinancialAnalysis(
-          action,
-          userName,
-          "general",
-          allInputTextForSim,
-          allExtractedTransactions,
-          useAI // 🆕 Add this parameter
-        );
-        setAnalysisResult(docProcessingLog + financialResult);
-      }
       toast({
-        title: "Boogasi AI Analysis Complete",
+        title: "Analysis Complete",
         description: `AI insights for "${action}" are ready.`,
       });
     } catch (error) {
-      console.error("Error during AI request processing:", error);
-      const errorReport = `An error occurred while Boogasi AI was processing your request for "${action}": ${
-        error.message || "Unknown error"
-      }. Please try again.`;
-      setAnalysisResult(errorReport);
-      setPortfolioFeaturesResult("");
+      console.error("Error during AI analysis:", error);
       toast({
         variant: "destructive",
-        title: "AI Processing Failed",
-        description: `An error occurred: ${error.message || "Unknown error"}`,
+        title: "Analysis Failed",
+        description: error.message || "An unexpected error occurred",
       });
     } finally {
       setIsLoading(false);
       setLoadingMessage("");
     }
   };
+
+  // Normalize transactions: ensure amount is a number and infer type from sign
+  function normalizeTransaction(tx) {
+    const amount =
+      typeof tx.amount === "string"
+        ? parseFloat(tx.amount.replace(/[,₱\s]/g, ""))
+        : Number(tx.amount || 0);
+    const inferredType =
+      tx.type && tx.type !== "UNKNOWN"
+        ? tx.type
+        : amount < 0
+        ? "expense"
+        : "income";
+    // keep original fields but ensure numeric amount and type set
+    return {
+      ...tx,
+      amount: Number.isNaN(amount) ? 0 : amount,
+      type: inferredType,
+      category: tx.category || tx.description || "other",
+    };
+  }
 
   return (
     <motion.div
@@ -430,10 +444,9 @@ const AIAssistantPage = () => {
           acceptedFileTypes={acceptedFileTypes}
         />
         <AIAnalysisActions
-          handleAIRequest={handleAIRequest}
+          onAnalyze={handleAIRequest}
           isLoading={isLoading}
-          loadingMessage={loadingMessage}
-          analysisResult={analysisResult}
+          result={analysisResult} // analysisResult must be the uiResult you set after API call
           portfolioFeaturesResult={portfolioFeaturesResult}
         />
       </div>
@@ -495,6 +508,23 @@ const AIAssistantPage = () => {
           Upload Files
         </Button>
       </div>
+
+      {/* Add this near your other buttons */}
+      <Button onClick={handleAnalyzeClick} disabled={isLoading}>
+        {isLoading ? "Analyzing..." : "Analyze Transactions"}
+      </Button>
+
+      {apiError && <div className="text-red-500 mt-4">Error: {apiError}</div>}
+
+      {analysisResult && (
+        <div className="mt-8">
+          <h2 className="text-2xl font-bold mb-4">Analysis Results</h2>
+          <AIInsightsDisplay
+            feature={analysisResult.feature}
+            data={analysisResult.data}
+          />
+        </div>
+      )}
     </motion.div>
   );
 };

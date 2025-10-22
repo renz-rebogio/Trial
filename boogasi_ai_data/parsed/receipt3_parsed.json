@@ -2,7 +2,7 @@
   "success": true,
   "filename": "receipt3.jpg",
   "document_type": "receipt",
-  "processed_at": "2025-10-19T09:49:46.830187",
+  "processed_at": "2025-10-22T02:09:17.204452",
   "data": {
     "merchant_info": {
       "name": "Hotel Restaurant and Bar"
@@ -46,6 +46,57 @@
       "tax": 4.76,
       "total": 56.0
     },
-    "document_type": "receipt"
+    "document_type": "receipt",
+    "transactions": [
+      {
+        "date": "2020-09-25",
+        "description": "Tel:",
+        "amount": 650.0,
+        "type": "expense",
+        "category": "uncategorized"
+      },
+      {
+        "date": "2020-09-25",
+        "description": "Hendrick Gin & Tonic",
+        "amount": 10.5,
+        "type": "expense",
+        "category": "transfer_out"
+      },
+      {
+        "date": "2020-09-25",
+        "description": "Ginger Mule",
+        "amount": 9.5,
+        "type": "expense",
+        "category": "transfer_out"
+      },
+      {
+        "date": "2020-09-25",
+        "description": "Glass Camus Zin",
+        "amount": 24.0,
+        "type": "expense",
+        "category": "transfer_out"
+      },
+      {
+        "date": "2020-09-25",
+        "description": "Titos Vodka Soda",
+        "amount": 12.0,
+        "type": "expense",
+        "category": "transfer_out"
+      },
+      {
+        "date": "2020-09-25",
+        "description": "Amount",
+        "amount": 60.76,
+        "type": "expense",
+        "category": "uncategorized"
+      },
+      {
+        "date": "2020-09-25",
+        "description": "BALANCE",
+        "amount": 60.76,
+        "type": "expense",
+        "category": "opening_balance"
+      }
+    ]
   }
 }

@@ -14,67 +14,78 @@
       "date": "2023-11-24",
       "description": "BALANCE BROUGHT FORWARD",
       "amount": 0.57,
-      "category": "opening_balance"
+      "category": "opening_balance",
+      "type": "income"
     },
     {
       "date": "2023-11-25",
       "description": "CR Transfer",
       "amount": 2212.14,
-      "category": "transfer_in"
+      "category": "transfer_in",
+      "type": "income"
     },
     {
       "date": "2023-11-26",
       "description": "BP Telephone Bill Payment MASTERCARD",
       "amount": -60,
-      "category": "utilities"
+      "category": "utilities",
+      "type": "expense"
     },
     {
       "date": "2023-11-27",
       "description": "DHL delivery services",
       "amount": -30.50,
-      "category": "shopping"
+      "category": "shopping",
+      "type": "expense"
     },
     {
       "date": "2023-12-28",
       "description": "CR Cheque Deposit",
       "amount": 425.23,
-      "category": "income"
+      "category": "income",
+      "type": "income"
     },
     {
       "date": "2023-11-29",
       "description": "CR Jessica George",
       "amount": 500,
-      "category": "transfer_in"
+      "category": "transfer_in",
+      "type": "income"
     },
     {
       "date": "2023-11-29",
       "description": "BP Shell 2-4NEW CROSS ROAD",
       "amount": -202.34,
-      "category": "transportation"
+      "category": "transportation",
+      "type": "expense"
     },
     {
       "date": "2023-11-29",
       "description": "BP Pizza Union Hoxton",
       "amount": -15.13,
-      "category": "dining"
+      "category": "dining",
+      "type": "expense"
     },
     {
       "date": "2023-11-30",
       "description": "BP Uber",
       "amount": -28.90,
-      "category": "transportation"
+      "category": "transportation",
+      "type": "expense"
     },
     {
       "date": "2023-12-01",
       "description": "BP British Gas Payment",
       "amount": -659.23,
-      "category": "utilities"
+      "category": "utilities",
+      "type": "expense"
     },
     {
       "date": "2023-12-02",
       "description": "BP Costa Coffee",
       "amount": -7,
-      "category": "dining"
+      "category": "dining",
+      "type": "expense"
     }
   ]
 }

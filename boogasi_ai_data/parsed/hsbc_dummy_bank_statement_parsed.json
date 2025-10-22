@@ -1,28 +1,19 @@
 {
   "success": true,
   "filename": "hsbc_dummy_bank_statement.jpg",
-  "document_type": "receipt",
-  "processed_at": "2025-10-19T09:49:39.386598",
+  "document_type": "bank_statement",
+  "processed_at": "2025-10-22T02:09:10.563969",
   "data": {
-    "merchant_info": {
-      "name": "HSBC <>"
+    "account_info": {},
+    "statement_period": {},
+    "balance": {},
+    "transactions": [],
+    "summary": {
+      "total_transactions": 0,
+      "total_credit": 0,
+      "total_debit": 0,
+      "net_change": 0
     },
-    "transaction_info": {},
-    "items": [
-      {
-        "description": "From Overseas",
-        "price": 6.27
-      },
-      {
-        "description": "Statement From 04 AUG",
-        "price": 2025.0
-      },
-      {
-        "description": "(5Aq Ag NENSTAN SHOPPING HART",
-        "price": 275700.0
-      }
-    ],
-    "totals": {},
-    "document_type": "receipt"
+    "document_type": "bank_statement"
   }
 }
