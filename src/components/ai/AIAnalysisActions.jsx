@@ -22,8 +22,9 @@ import {
   Combine,
 } from "lucide-react";
 
+import FlaggedTransactions from "./FlaggedTransactions";
 import ExpenseCanvas from "./ExpenseCanvas";
-import CashFlowPieChart from "./CashFlowCanvas";
+import CashFlowForecast from "./CashFlowCanvas";
 import AIReportDisplay from "./AIReportDisplay";
 
 // Simple className helper (fallback if you don't have a shared `cn`/`classNames` util)
@@ -301,7 +302,14 @@ const AIAnalysisActions = ({
           (result.feature === "expense_summary" ? (
             <ExpenseCanvas result={result} />
           ) : result.feature === "cash_flow_forecast" ? (
-            <CashFlowPieChart data={result.data} />
+            <CashFlowForecast
+              data={result.transactions || result.data || result}
+            />
+          ) : result.feature === "flag_unusual_transactions" ? (
+            <FlaggedTransactions
+              insights={result.data}
+              transactions={result.transactions}
+            />
           ) : (
             <AIReportDisplay result={result} />
           ))}
