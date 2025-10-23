@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -26,6 +26,8 @@ import FlaggedTransactions from "./FlaggedTransactions";
 import ExpenseCanvas from "./ExpenseCanvas";
 import CashFlowForecast from "./CashFlowCanvas";
 import AIReportDisplay from "./AIReportDisplay";
+import WeeklyReport from "./WeeklyReport";
+import CombinedAnalysis from "./CombinedAnalysis";
 
 // Simple className helper (fallback if you don't have a shared `cn`/`classNames` util)
 const cn = (...parts) => parts.flat().filter(Boolean).join(" ");
@@ -71,6 +73,19 @@ const AIAnalysisActions = ({
   portfolioFeaturesResult,
   result,
 }) => {
+  // local hidden transactions set (tracks indices hidden by the flagged UI)
+  const [hiddenTxIndices, setHiddenTxIndices] = useState(() => new Set());
+
+  useEffect(() => {
+    const onHide = (e) => {
+      const idx = Number(e?.detail?.index);
+      if (!Number.isFinite(idx)) return;
+      setHiddenTxIndices((s) => new Set([...s, idx]));
+    };
+    window.addEventListener("hideTransaction", onHide);
+    return () => window.removeEventListener("hideTransaction", onHide);
+  }, []);
+
   // Log detected categories whenever new result/analysisResult arrives
   useEffect(() => {
     const txs =
@@ -302,14 +317,16 @@ const AIAnalysisActions = ({
           (result.feature === "expense_summary" ? (
             <ExpenseCanvas result={result} />
           ) : result.feature === "cash_flow_forecast" ? (
-            <CashFlowForecast
-              data={result.transactions || result.data || result}
-            />
+            <CashFlowForecast data={result} />
           ) : result.feature === "flag_unusual_transactions" ? (
             <FlaggedTransactions
               insights={result.data}
               transactions={result.transactions}
             />
+          ) : result.feature === "weekly_report" ? (
+            <WeeklyReport report={result} />
+          ) : result.feature === "combined_insights" ? (
+            <CombinedAnalysis result={result} />
           ) : (
             <AIReportDisplay result={result} />
           ))}

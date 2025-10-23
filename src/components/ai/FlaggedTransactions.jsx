@@ -7,13 +7,28 @@ const formatCurrency = (v = 0) =>
     minimumFractionDigits: 2,
   }).format(v);
 
+// contrast helper (reuse simple luminance check)
+function getContrastColor(rgbStr) {
+  try {
+    const m = rgbStr.match(/rgb\s*\(\s*(\d+),\s*(\d+),\s*(\d+)\s*\)/i);
+    if (m) {
+      const r = Number(m[1]),
+        g = Number(m[2]),
+        b = Number(m[3]);
+      const lum = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+      return lum > 0.6 ? "#111" : "#fff";
+    }
+  } catch (e) {}
+  return "#111";
+}
+
 export default function FlaggedTransactions({
   insights = {},
   transactions = [],
+  hiddenTxIndices = new Set(),
 }) {
   const flagged = insights?.flagged || insights?.flags || [];
 
-  // local dismissed set (client-side only)
   const [dismissed, setDismissed] = useState(() => new Set());
 
   const mapped = useMemo(() => {
@@ -29,7 +44,6 @@ export default function FlaggedTransactions({
         mapByIndex.get(key) ||
         flagged.find(
           (f) =>
-            // fallback fuzzy match: same date+amount+short desc
             f.date &&
             t.date &&
             f.date === t.date?.toString().slice(0, 10) &&
@@ -50,7 +64,7 @@ export default function FlaggedTransactions({
   if (!mapped.length) return null;
 
   return (
-    <div className="rounded-lg border bg-white shadow p-4">
+    <div className="rounded-lg border bg-white shadow p-4 text-gray-800">
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-lg font-semibold">Flagged transactions</h3>
         <span className="text-sm text-gray-500">{mapped.length} flagged</span>
@@ -58,11 +72,19 @@ export default function FlaggedTransactions({
 
       <ul className="space-y-3">
         {mapped.map(({ txIndex, tx, flag }) => {
-          if (dismissed.has(txIndex)) return null;
+          if (dismissed.has(txIndex) || hiddenTxIndices.has(txIndex))
+            return null;
+          const severityBg =
+            flag.severity === "high"
+              ? "#ef4444"
+              : flag.severity === "medium"
+              ? "#f59e0b"
+              : "#fde68a";
+          const pillTextColor = getContrastColor(severityBg);
           return (
             <li
               key={txIndex}
-              className="p-3 border rounded flex justify-between items-start"
+              className="p-3 border rounded flex justify-between items-start bg-white"
             >
               <div>
                 <div className="flex items-baseline space-x-3">
@@ -71,13 +93,16 @@ export default function FlaggedTransactions({
                       flag.date || tx.date || tx.date_raw
                     ).toLocaleDateString("en-PH")}
                   </span>
-                  <strong className="text-sm">
+                  <strong className="text-sm text-gray-800">
                     {tx.description || flag.description}
                   </strong>
                 </div>
-                <div className="mt-1 text-sm text-gray-700">
+                <div className="mt-1 text-sm text-gray-800">
                   {formatCurrency(tx.amount ?? flag.amount)}
-                  <span className="ml-3 text-xs inline-block px-2 py-0.5 rounded bg-yellow-100 text-yellow-800">
+                  <span
+                    style={{ background: severityBg, color: pillTextColor }}
+                    className="ml-3 text-xs inline-block px-2 py-0.5 rounded"
+                  >
                     {flag.severity || "medium"}
                   </span>
                 </div>
@@ -101,7 +126,6 @@ export default function FlaggedTransactions({
                 <button
                   className="text-sm text-indigo-600 hover:underline"
                   onClick={() => {
-                    // simple dismiss (client-side)
                     setDismissed((s) => new Set([...s, txIndex]));
                   }}
                 >
@@ -111,7 +135,6 @@ export default function FlaggedTransactions({
                 <button
                   className="text-sm text-red-600 hover:underline"
                   onClick={() => {
-                    // Hide transaction from UI: emit a custom event so parent can remove or mark hidden
                     const ev = new CustomEvent("hideTransaction", {
                       detail: { index: txIndex },
                     });
