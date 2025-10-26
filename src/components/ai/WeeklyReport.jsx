@@ -1,5 +1,6 @@
 import React from "react";
 import FlaggedTransactions from "./FlaggedTransactions";
+import { useState } from "react";
 
 const fmt = (v = 0) =>
   new Intl.NumberFormat("en-PH", { style: "currency", currency: "PHP" }).format(
@@ -42,6 +43,9 @@ function getContrastColor(rgbStr) {
 export default function WeeklyReport({ report, hiddenTxIndices }) {
   console.log("DEBUG WeeklyReport received:", report);
 
+  // ADD THESE LINES - State for week navigation
+  const [weekOffset, setWeekOffset] = useState(0);
+
   if (!report) return null;
 
   // tolerant unwrapping if nested
@@ -66,31 +70,90 @@ export default function WeeklyReport({ report, hiddenTxIndices }) {
     );
   }
 
+  // ADD THIS - Calculate week boundaries and slice data
+  const DAYS_PER_WEEK = 7;
+  const totalDays = daily_series.length;
+  const totalWeeks = Math.ceil(totalDays / DAYS_PER_WEEK);
+  const currentWeek = Math.max(0, Math.min(weekOffset, totalWeeks - 1));
+
+  const startIdx = currentWeek * DAYS_PER_WEEK;
+  const endIdx = Math.min(startIdx + DAYS_PER_WEEK, totalDays);
+  const currentWeekData = daily_series.slice(startIdx, endIdx);
+
+  // ADD THIS - Recalculate summary for current week
+  const weekSummary = {
+    total_income: currentWeekData.reduce((sum, d) => sum + (d.income || 0), 0),
+    total_expenses: currentWeekData.reduce(
+      (sum, d) => sum + (d.expense || 0),
+      0
+    ),
+    net: currentWeekData.reduce((sum, d) => sum + (d.net || 0), 0),
+    avg_daily_spend:
+      currentWeekData.reduce((sum, d) => sum + Math.abs(d.net || 0), 0) /
+      currentWeekData.length,
+    transaction_count: currentWeekData.reduce(
+      (sum, d) => sum + (d.transactions_count || 0),
+      0
+    ),
+  };
+
   const maxAbs = Math.max(...daily_series.map((d) => Math.abs(d.net || 0)), 1);
 
   return (
     <div className="max-h-[80vh] overflow-auto p-4 space-y-6 text-gray-800">
+      {/* ADD THIS - Week navigation header */}
+      <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg shadow">
+        <button
+          onClick={() => setWeekOffset(Math.max(0, weekOffset - 1))}
+          disabled={weekOffset === 0}
+          className="px-4 py-2 bg-white rounded-lg shadow hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+        >
+          ← Previous Week
+        </button>
+
+        <div className="text-center">
+          <div className="text-sm font-semibold text-gray-700">
+            Week {currentWeek + 1} of {totalWeeks}
+          </div>
+          <div className="text-xs text-gray-500">
+            {currentWeekData[0]?.date} -{" "}
+            {currentWeekData[currentWeekData.length - 1]?.date}
+          </div>
+        </div>
+
+        <button
+          onClick={() =>
+            setWeekOffset(Math.min(totalWeeks - 1, weekOffset + 1))
+          }
+          disabled={weekOffset >= totalWeeks - 1}
+          className="px-4 py-2 bg-white rounded-lg shadow hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+        >
+          Next Week →
+        </button>
+      </div>
+
+      {/* CHANGE THIS - Use weekSummary instead of summary */}
       <div className="grid grid-cols-4 gap-4">
         <div className="p-3 bg-white rounded shadow text-gray-800">
           <div className="text-sm text-gray-500">Total Income</div>
           <div className="text-xl font-bold">
-            {fmt(summary.total_income || 0)}
+            {fmt(weekSummary.total_income || 0)}
           </div>
         </div>
         <div className="p-3 bg-white rounded shadow text-gray-800">
           <div className="text-sm text-gray-500">Total Expenses</div>
           <div className="text-xl font-bold">
-            {fmt(summary.total_expenses || 0)}
+            {fmt(weekSummary.total_expenses || 0)}
           </div>
         </div>
         <div className="p-3 bg-white rounded shadow text-gray-800">
           <div className="text-sm text-gray-500">Net</div>
-          <div className="text-xl font-bold">{fmt(summary.net || 0)}</div>
+          <div className="text-xl font-bold">{fmt(weekSummary.net || 0)}</div>
         </div>
         <div className="p-3 bg-white rounded shadow text-gray-800">
           <div className="text-sm text-gray-500">Avg daily spend</div>
           <div className="text-xl font-bold">
-            {fmt(summary.avg_daily_spend || 0)}
+            {fmt(weekSummary.avg_daily_spend || 0)}
           </div>
         </div>
       </div>
@@ -98,7 +161,8 @@ export default function WeeklyReport({ report, hiddenTxIndices }) {
       <div className="p-4 bg-white rounded shadow text-gray-800">
         <h4 className="font-semibold mb-2">Daily spend heatmap</h4>
         <div className="flex space-x-2">
-          {daily_series.map((d) => {
+          {/* CHANGE THIS - Use currentWeekData instead of daily_series */}
+          {currentWeekData.map((d) => {
             const bg = heatColor(d.net, maxAbs);
             const textColor = getContrastColor(bg);
             return (

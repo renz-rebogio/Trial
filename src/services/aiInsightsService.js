@@ -35,6 +35,8 @@ export async function getAIInsights(transactions, feature) {
             body: JSON.stringify({
                 transactions: normalizedTransactions,
                 feature,
+                // ADD THIS for weekly_report
+      ...(feature === "weekly_report" && { days: 28 })
             }),
         });
 

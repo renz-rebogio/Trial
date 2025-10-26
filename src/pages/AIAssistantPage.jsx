@@ -360,14 +360,27 @@ const AIAssistantPage = () => {
 
       // Normalize transactions
       const normalizedTransactions = transactions.map((tx) => {
-        const amount =
+        let amount =
           typeof tx.amount === "string"
             ? parseFloat(tx.amount.replace(/[,₱\s]/g, ""))
             : Number(tx.amount || 0);
+
+        // If type is explicitly "expense" but amount is positive, make it negative
+        if (tx.type === "expense" && amount > 0) {
+          amount = -amount;
+        }
+        // If type is explicitly "income" but amount is negative, make it positive
+        if (tx.type === "income" && amount < 0) {
+          amount = Math.abs(amount);
+        }
+
+        // Infer type from amount if not explicitly set
+        const type = tx.type || (amount < 0 ? "expense" : "income");
+
         return {
           ...tx,
           amount: Number.isNaN(amount) ? 0 : amount,
-          type: amount < 0 ? "expense" : "income",
+          type: type,
           category: tx.category || tx.description || "other",
         };
       });
@@ -377,19 +390,66 @@ const AIAssistantPage = () => {
         normalizedTransactions.slice(0, 3)
       );
 
-      const result = await getAIInsights(normalizedTransactions, feature);
-      const uiResult = {
-        feature,
-        data: result,
-        transactions: normalizedTransactions,
-      };
+      // ADD THIS - Special handling for combined analysis
+      if (feature === "combined_insights") {
+        setLoadingMessage("Running all analyses... This may take a moment.");
 
-      setAnalysisResult(uiResult);
+        // Call all features
+        const [expenseSummary, cashFlow, flagged, weeklyReport] =
+          await Promise.all([
+            getAIInsights(normalizedTransactions, "expense_summary"),
+            getAIInsights(normalizedTransactions, "cash_flow_forecast"),
+            getAIInsights(normalizedTransactions, "flag_unusual_transactions"),
+            getAIInsights(normalizedTransactions, "weekly_report"),
+          ]);
 
-      toast({
-        title: "Analysis Complete",
-        description: `AI insights for "${action}" are ready.`,
-      });
+        const combinedResult = {
+          feature: "combined_insights",
+          generated_at: new Date().toISOString(),
+          summary: {
+            total_transactions: normalizedTransactions.length,
+            date_range: {
+              start: normalizedTransactions[0]?.date,
+              end: normalizedTransactions[normalizedTransactions.length - 1]
+                ?.date,
+            },
+          },
+          detailed_analyses: {
+            expense_summary: expenseSummary,
+            cash_flow_forecast: cashFlow,
+            flagged_transactions: flagged,
+            weekly_report: weeklyReport,
+          },
+        };
+
+        const uiResult = {
+          feature: "combined_insights",
+          data: combinedResult,
+          transactions: normalizedTransactions,
+        };
+
+        setAnalysisResult(uiResult);
+
+        toast({
+          title: "Combined Analysis Complete",
+          description: "All financial analyses have been generated.",
+        });
+      } else {
+        // Original code for individual features
+        const result = await getAIInsights(normalizedTransactions, feature);
+        const uiResult = {
+          feature,
+          data: result,
+          transactions: normalizedTransactions,
+        };
+
+        setAnalysisResult(uiResult);
+
+        toast({
+          title: "Analysis Complete",
+          description: `AI insights for "${action}" are ready.`,
+        });
+      }
     } catch (error) {
       console.error("Error during AI analysis:", error);
       toast({

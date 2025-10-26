@@ -218,7 +218,7 @@ def flag_unusual_transactions(data: Any, z_threshold: float = 2.0) -> Dict[str, 
         "summary_text": summary_text
     }
 
-def generate_weekly_report(transactions: Any, days: int = 7) -> Dict[str, Any]:
+def generate_weekly_report(transactions: Any, days: int = 28) -> Dict[str, Any]:
     try:
         df = _to_dataframe(transactions)
         if df.empty:
@@ -241,9 +241,14 @@ def generate_weekly_report(transactions: Any, days: int = 7) -> Dict[str, Any]:
         for d in all_days:
             mask = period_df['date'].dt.normalize() == d.normalize()
             day_tx = period_df[mask]
-            income = float(day_tx.loc[day_tx['amount'] >= 0, 'amount'].sum() or 0.0)
-            expense = float(abs(day_tx.loc[day_tx['amount'] < 0, 'amount'].sum() or 0.0))
-            net = float(day_tx['amount'].sum() or 0.0)
+            
+            # Use explicit type field or amount sign
+            income_mask = (day_tx['type'].str.lower() == 'income') | ((day_tx['type'] == '') & (day_tx['amount'] > 0))
+            expense_mask = (day_tx['type'].str.lower() == 'expense') | ((day_tx['type'] == '') & (day_tx['amount'] < 0))
+            
+            income = float(day_tx.loc[income_mask, 'amount'].abs().sum() or 0.0)
+            expense = float(day_tx.loc[expense_mask, 'amount'].abs().sum() or 0.0)
+            net = float(income - expense)
             daily_series.append({
                 "date": d.strftime("%Y-%m-%d"),
                 "income": income,
@@ -253,9 +258,12 @@ def generate_weekly_report(transactions: Any, days: int = 7) -> Dict[str, Any]:
             })
 
         # summary (compute if missing)
-        total_income = float(period_df.loc[period_df['amount'] >= 0, 'amount'].sum() or 0.0)
-        total_expenses = float(abs(period_df.loc[period_df['amount'] < 0, 'amount'].sum() or 0.0))
-        net = float(period_df['amount'].sum() or 0.0)
+        income_mask = (period_df['type'].str.lower() == 'income') | ((period_df['type'] == '') & (period_df['amount'] > 0))
+        expense_mask = (period_df['type'].str.lower() == 'expense') | ((period_df['type'] == '') & (period_df['amount'] < 0))
+        
+        total_income = float(period_df.loc[income_mask, 'amount'].abs().sum() or 0.0)
+        total_expenses = float(period_df.loc[expense_mask, 'amount'].abs().sum() or 0.0)
+        net = float(total_income - total_expenses)
         avg_daily_spend = float(
             (sum(abs(d['net']) for d in daily_series) / max(1, len(daily_series)))
         )
