@@ -2,20 +2,27 @@
   "success": true,
   "filename": "hsbc_uk_bankstatement4.jpg",
   "document_type": "bank_statement",
-  "processed_at": "2025-10-22T02:09:13.122447",
+  "processed_at": "2025-10-29T12:14:12.916224",
   "data": {
-    "account_info": {
-      "account_number": "99678268"
+    "bank": "HSBC_UK",
+    "statement_type": "bank_statement",
+    "statement_period": "",
+    "currency": "GBP",
+    "payment_summary": {
+      "openingBalance": 0.0,
+      "paymentsIn": 0,
+      "paymentsOut": 80.0,
+      "closingBalance": -80.0
     },
-    "statement_period": {},
-    "balance": {},
-    "transactions": [],
-    "summary": {
-      "total_transactions": 0,
-      "total_credit": 0,
-      "total_debit": 0,
-      "net_change": 0
-    },
+    "transactions": [
+      {
+        "date": "40/70/80",
+        "description": "",
+        "amount": 80.0,
+        "type": "expense",
+        "category": "uncategorized"
+      }
+    ],
     "document_type": "bank_statement"
   }
 }

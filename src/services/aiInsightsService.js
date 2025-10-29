@@ -1,42 +1,19 @@
-const API_URL = 'http://localhost:8000';  // Update with your FastAPI URL
-
-function normalizeTransaction(tx) {
-    // Convert amount to number if it's a string
-    const amount = typeof tx.amount === 'string' ? parseFloat(tx.amount) : tx.amount;
-    
-    // Infer type based on amount
-    const type = amount < 0 ? 'expense' : 'income';
-    
-    // Infer category based on description
-    let category = 'other';
-    const desc = tx.description?.toLowerCase() || '';
-    if (desc.includes('transfer')) category = 'transfer';
-    if (desc.includes('withdrawal') || desc.includes('atm')) category = 'withdrawal';
-    
-    return {
-        date: tx.date || '',
-        description: tx.description || '',
-        amount: Math.abs(amount), // AI insights expects positive amounts
-        type,
-        category
-    };
-}
+const API_URL = 'http://localhost:8000';
 
 export async function getAIInsights(transactions, feature) {
     try {
-        // Normalize transactions before sending
-        const normalizedTransactions = transactions.map(normalizeTransaction);
-
+        // Send transactions AS-IS without any modification
+        // Your AI model has already processed and categorized them correctly
         const response = await fetch(`${API_URL}/api/insights`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                transactions: normalizedTransactions,
+                transactions: transactions,
                 feature,
-                // ADD THIS for weekly_report
-      ...(feature === "weekly_report" && { days: 28 })
+                // Add days parameter for weekly_report feature
+                ...(feature === "weekly_report" && { days: 28 })
             }),
         });
 

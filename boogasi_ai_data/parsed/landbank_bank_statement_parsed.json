@@ -2,18 +2,19 @@
   "success": true,
   "filename": "landbank_bank_statement.png",
   "document_type": "bank_statement",
-  "processed_at": "2025-10-22T02:09:15.387709",
+  "processed_at": "2025-10-29T12:14:15.137010",
   "data": {
-    "account_info": {},
-    "statement_period": {},
-    "balance": {},
-    "transactions": [],
-    "summary": {
-      "total_transactions": 0,
-      "total_credit": 0,
-      "total_debit": 0,
-      "net_change": 0
+    "bank": "HSBC_UK",
+    "statement_type": "bank_statement",
+    "statement_period": "",
+    "currency": "GBP",
+    "payment_summary": {
+      "openingBalance": 0.0,
+      "paymentsIn": 0,
+      "paymentsOut": 0,
+      "closingBalance": 0.0
     },
+    "transactions": [],
     "document_type": "bank_statement"
   }
 }

@@ -2,7 +2,7 @@
   "success": true,
   "filename": "receipt1.png",
   "document_type": "receipt",
-  "processed_at": "2025-10-22T02:09:17.960379",
+  "processed_at": "2025-10-29T12:14:17.518030",
   "data": {
     "merchant_info": {
       "name": "TARGET."
@@ -41,7 +41,7 @@
         "description": "SACRAMENTO CA",
         "amount": 28856.0,
         "type": "expense",
-        "category": "housing"
+        "category": "uncategorized"
       },
       {
         "date": "2025-03-12",
@@ -55,14 +55,14 @@
         "description": "1 ALIBEISS CLEANING WIPES",
         "amount": 8899.0,
         "type": "expense",
-        "category": "opening_balance"
+        "category": "uncategorized"
       },
       {
         "date": "2025-03-12",
         "description": "Tc#",
         "amount": 4891.0,
         "type": "expense",
-        "category": "housing"
+        "category": "uncategorized"
       }
     ]
   }

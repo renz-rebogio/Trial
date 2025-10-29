@@ -116,6 +116,18 @@ class BoogasiAiClient {
     const desc = (description || '').toLowerCase();
     const amt = parseFloat(amount) || 0;
 
+    // High-priority keywords
+    if (desc.includes('netflix') || desc.includes('google play') || desc.includes('spotify') || desc.includes('subscription')) {
+      return 'entertainment';
+    }
+    if (desc.includes('transfer to') || /transfer\s+to\s+bank/.test(desc) || desc.includes('payment to')) {
+      return 'transfer_out';
+    }
+    // only treat opening balance if explicitly present
+    if (desc.includes('opening balance') || desc.includes('balance b/f') || desc.includes('previous balance') || desc.includes('balance brought forward')) {
+      return 'opening_balance';
+    }
+
     // Use trained model patterns if available
     if (this.modelArtifacts && this.modelArtifacts.learned_categories) {
       const learnedCategory = this.categorizeWithTrainedModel(desc, amt);

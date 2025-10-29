@@ -100,7 +100,7 @@ export default function WeeklyReport({ report, hiddenTxIndices }) {
   const maxAbs = Math.max(...daily_series.map((d) => Math.abs(d.net || 0)), 1);
 
   return (
-    <div className="max-h-[80vh] overflow-auto p-4 space-y-6 text-gray-800">
+    <div className="max-h-[80vh] overflow-auto p-4 space-y-6 text-gray-800 w-full max-w-full">
       {/* ADD THIS - Week navigation header */}
       <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg shadow">
         <button

@@ -566,14 +566,31 @@ export const ocrImageAndParseTransactions = async (file, manualBank, useAIRecove
 
       console.log(`📊 PASS 1 Results: ${(parseResult?.formattedTransactions || []).length} transactions found`);
 
-      // Build an initial finalResult from pass 1
+      // 🤖 APPLY AI CATEGORIZATION to each transaction
+      const aiEnhancedTransactions = (parseResult.formattedTransactions || []).map(tx => {
+        // Call boogasiAI to categorize with BOTH description and amount
+        const aiCategory = boogasiAI.categorizeTransaction(
+          tx.description || tx.merchant || '', 
+          tx.amount
+        );
+        
+        return {
+          ...tx,
+          category: aiCategory, // Use AI category instead of 'uncategorized'
+          ai_categorized: true
+        };
+      });
+
+      console.log(`🤖 AI Categorization: ${aiEnhancedTransactions.slice(0, 3).map(t => `${t.description} → ${t.category}`).join(', ')}`);
+
+      // Build an initial finalResult from pass 1 with AI-enhanced transactions
       let finalResult = {
         rawText,
-        formattedTransactions: parseResult.formattedTransactions || [],
+        formattedTransactions: aiEnhancedTransactions,
         detectedBank,
         summary: parseResult.summary || {},
         recoveryPerformed: false,
-        originalCount: (parseResult.formattedTransactions || []).length
+        originalCount: aiEnhancedTransactions.length
       };
 
       // Optionally perform AI-enhanced recovery (multi-pass)
@@ -592,11 +609,23 @@ export const ocrImageAndParseTransactions = async (file, manualBank, useAIRecove
 
           // If recovery returned enhanced data, merge/replace
           if (recovered && recovered.formattedTransactions) {
+            // 🤖 APPLY AI CATEGORIZATION to recovered transactions too
+            const aiEnhancedRecovered = recovered.formattedTransactions.map(tx => {
+              if (!tx.category || tx.category === 'uncategorized') {
+                const aiCategory = boogasiAI.categorizeTransaction(
+                  tx.description || tx.merchant || '', 
+                  tx.amount
+                );
+                return { ...tx, category: aiCategory, ai_categorized: true };
+              }
+              return tx;
+            });
+
             finalResult = {
               ...finalResult,
-              formattedTransactions: recovered.formattedTransactions,
+              formattedTransactions: aiEnhancedRecovered,
               recoveryPerformed: recovered.recoveryPerformed || true,
-              recoveredCount: (recovered.formattedTransactions || []).length - finalResult.originalCount,
+              recoveredCount: aiEnhancedRecovered.length - finalResult.originalCount,
               summary: recovered.summary || finalResult.summary
             };
           }

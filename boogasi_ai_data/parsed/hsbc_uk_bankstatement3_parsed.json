@@ -2,29 +2,41 @@
   "success": true,
   "filename": "hsbc_uk_bankstatement3.jpg",
   "document_type": "bank_statement",
-  "processed_at": "2025-10-22T02:09:12.018572",
+  "processed_at": "2025-10-29T12:14:11.741349",
   "data": {
-    "account_info": {},
-    "statement_period": {},
-    "balance": {
-      "beginning": 10000.0,
-      "ending": 5700.0
+    "bank": "HSBC_UK",
+    "statement_type": "bank_statement",
+    "statement_period": "",
+    "currency": "GBP",
+    "payment_summary": {
+      "openingBalance": 10000.0,
+      "paymentsIn": 9000.0,
+      "paymentsOut": 10700.0,
+      "closingBalance": 8300.0
     },
     "transactions": [
       {
-        "date": "00/06/23",
-        "description": "Credit",
-        "amount": 5000.0,
+        "date": "08 Jun 24",
+        "description": "“ileal 3,000.00 9,000",
+        "amount": 9000.0,
         "type": "income",
-        "category": "transfer_in"
+        "category": "uncategorized"
+      },
+      {
+        "date": "29 Jun 24",
+        "description": "Drawn on Cho No. 434212 Debit 2,800.00 4,700",
+        "amount": 4700.0,
+        "type": "expense",
+        "category": "uncategorized"
+      },
+      {
+        "date": "42 Jun 24",
+        "description": "Direct Debit HSBC USA Debit 1,000.00 6,000.",
+        "amount": 6000.0,
+        "type": "expense",
+        "category": "uncategorized"
       }
     ],
-    "summary": {
-      "total_transactions": 1,
-      "total_credit": 5000.0,
-      "total_debit": 0,
-      "net_change": 5000.0
-    },
     "document_type": "bank_statement"
   }
 }

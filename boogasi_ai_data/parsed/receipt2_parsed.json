@@ -2,7 +2,7 @@
   "success": true,
   "filename": "receipt2.png",
   "document_type": "receipt",
-  "processed_at": "2025-10-22T02:09:18.768177",
+  "processed_at": "2025-10-29T12:14:18.347549",
   "data": {
     "merchant_info": {
       "name": "QuickStop Market"
@@ -40,21 +40,21 @@
         "description": "2 Bottled Water (500m1)",
         "amount": 300.0,
         "type": "expense",
-        "category": "opening_balance"
+        "category": "utilities"
       },
       {
         "date": "2025-09-30",
         "description": "Card number AK eK kA",
         "amount": 4922.0,
         "type": "expense",
-        "category": "cash_withdrawal"
+        "category": "uncategorized"
       },
       {
         "date": "2025-09-30",
         "description": "Reference #",
         "amount": 6.284528926024624e+19,
         "type": "expense",
-        "category": "opening_balance"
+        "category": "uncategorized"
       },
       {
         "date": "2025-09-30",

@@ -316,9 +316,9 @@ const CashFlowForecast = ({ data }) => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full max-w-full">
       {/* Monthly Summary Card */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
         <div className="rounded-lg border bg-white shadow p-4">
           <h5 className="text-sm font-medium text-gray-500 mb-2">
             Total Income

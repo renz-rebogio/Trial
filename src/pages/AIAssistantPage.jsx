@@ -349,6 +349,7 @@ const AIAssistantPage = () => {
         throw new Error(`Unknown action: ${action}`);
       }
 
+      // Get transactions from OCR - they already have AI categorization applied
       const transactions = Object.values(ocrProcessedData || {})
         .flatMap((r) => r?.formattedTransactions || [])
         .filter(
@@ -358,60 +359,32 @@ const AIAssistantPage = () => {
             typeof tx.amount !== "undefined"
         );
 
-      // Normalize transactions
-      const normalizedTransactions = transactions.map((tx) => {
-        let amount =
-          typeof tx.amount === "string"
-            ? parseFloat(tx.amount.replace(/[,₱\s]/g, ""))
-            : Number(tx.amount || 0);
-
-        // If type is explicitly "expense" but amount is positive, make it negative
-        if (tx.type === "expense" && amount > 0) {
-          amount = -amount;
-        }
-        // If type is explicitly "income" but amount is negative, make it positive
-        if (tx.type === "income" && amount < 0) {
-          amount = Math.abs(amount);
-        }
-
-        // Infer type from amount if not explicitly set
-        const type = tx.type || (amount < 0 ? "expense" : "income");
-
-        return {
-          ...tx,
-          amount: Number.isNaN(amount) ? 0 : amount,
-          type: type,
-          category: tx.category || tx.description || "other",
-        };
-      });
-
       console.log(
-        "[AI] Normalized transactions:",
-        normalizedTransactions.slice(0, 3)
+        "[AI] Sending transactions to backend:",
+        transactions.slice(0, 3)
       );
 
-      // ADD THIS - Special handling for combined analysis
+      // Special handling for combined analysis
       if (feature === "combined_insights") {
         setLoadingMessage("Running all analyses... This may take a moment.");
 
-        // Call all features
+        // Call all features in parallel
         const [expenseSummary, cashFlow, flagged, weeklyReport] =
           await Promise.all([
-            getAIInsights(normalizedTransactions, "expense_summary"),
-            getAIInsights(normalizedTransactions, "cash_flow_forecast"),
-            getAIInsights(normalizedTransactions, "flag_unusual_transactions"),
-            getAIInsights(normalizedTransactions, "weekly_report"),
+            getAIInsights(transactions, "expense_summary"),
+            getAIInsights(transactions, "cash_flow_forecast"),
+            getAIInsights(transactions, "flag_unusual_transactions"),
+            getAIInsights(transactions, "weekly_report"),
           ]);
 
         const combinedResult = {
           feature: "combined_insights",
           generated_at: new Date().toISOString(),
           summary: {
-            total_transactions: normalizedTransactions.length,
+            total_transactions: transactions.length,
             date_range: {
-              start: normalizedTransactions[0]?.date,
-              end: normalizedTransactions[normalizedTransactions.length - 1]
-                ?.date,
+              start: transactions[0]?.date,
+              end: transactions[transactions.length - 1]?.date,
             },
           },
           detailed_analyses: {
@@ -425,7 +398,7 @@ const AIAssistantPage = () => {
         const uiResult = {
           feature: "combined_insights",
           data: combinedResult,
-          transactions: normalizedTransactions,
+          transactions: transactions,
         };
 
         setAnalysisResult(uiResult);
@@ -435,12 +408,12 @@ const AIAssistantPage = () => {
           description: "All financial analyses have been generated.",
         });
       } else {
-        // Original code for individual features
-        const result = await getAIInsights(normalizedTransactions, feature);
+        // Individual feature analysis
+        const result = await getAIInsights(transactions, feature);
         const uiResult = {
           feature,
           data: result,
-          transactions: normalizedTransactions,
+          transactions: transactions,
         };
 
         setAnalysisResult(uiResult);
@@ -462,27 +435,6 @@ const AIAssistantPage = () => {
       setLoadingMessage("");
     }
   };
-
-  // Normalize transactions: ensure amount is a number and infer type from sign
-  function normalizeTransaction(tx) {
-    const amount =
-      typeof tx.amount === "string"
-        ? parseFloat(tx.amount.replace(/[,₱\s]/g, ""))
-        : Number(tx.amount || 0);
-    const inferredType =
-      tx.type && tx.type !== "UNKNOWN"
-        ? tx.type
-        : amount < 0
-        ? "expense"
-        : "income";
-    // keep original fields but ensure numeric amount and type set
-    return {
-      ...tx,
-      amount: Number.isNaN(amount) ? 0 : amount,
-      type: inferredType,
-      category: tx.category || tx.description || "other",
-    };
-  }
 
   return (
     <motion.div
@@ -506,10 +458,53 @@ const AIAssistantPage = () => {
         <AIAnalysisActions
           onAnalyze={handleAIRequest}
           isLoading={isLoading}
-          result={analysisResult} // analysisResult must be the uiResult you set after API call
           portfolioFeaturesResult={portfolioFeaturesResult}
         />
       </div>
+
+      {/* Dedicated Results Canvas Area - RIGHT AFTER TOOLS */}
+      {analysisResult && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="mt-8 w-full"
+        >
+          <div className="bg-gradient-to-r from-indigo-50 to-purple-50 border-2 border-indigo-200 rounded-lg p-6 shadow-lg">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-3xl font-bold text-indigo-900">
+                  📊 Analysis Results
+                </h2>
+                <p className="text-sm text-indigo-600 mt-1">
+                  Feature:{" "}
+                  {analysisResult.feature?.replace(/_/g, " ").toUpperCase()} •
+                  Generated at {new Date().toLocaleString()}
+                </p>
+              </div>
+              <button
+                onClick={() => setAnalysisResult(null)}
+                className="px-4 py-2 bg-white text-indigo-600 rounded-lg shadow hover:bg-indigo-50 transition-all font-semibold"
+              >
+                ✕ Clear Results
+              </button>
+            </div>
+
+            <div className="bg-white rounded-lg shadow-md p-6 w-full max-w-none">
+              <AIInsightsDisplay
+                feature={analysisResult.feature}
+                data={analysisResult.data}
+              />
+            </div>
+          </div>
+        </motion.div>
+      )}
+
+      {apiError && (
+        <div className="mt-6 p-4 bg-red-50 border-2 border-red-200 rounded-lg text-red-700">
+          <strong>⚠️ Error:</strong> {apiError}
+        </div>
+      )}
 
       {/* AI Enhancement Toggle */}
       <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-300 rounded-lg shadow-md">
@@ -568,23 +563,6 @@ const AIAssistantPage = () => {
           Upload Files
         </Button>
       </div>
-
-      {/* Add this near your other buttons */}
-      <Button onClick={handleAnalyzeClick} disabled={isLoading}>
-        {isLoading ? "Analyzing..." : "Analyze Transactions"}
-      </Button>
-
-      {apiError && <div className="text-red-500 mt-4">Error: {apiError}</div>}
-
-      {analysisResult && (
-        <div className="mt-8">
-          <h2 className="text-2xl font-bold mb-4">Analysis Results</h2>
-          <AIInsightsDisplay
-            feature={analysisResult.feature}
-            data={analysisResult.data}
-          />
-        </div>
-      )}
     </motion.div>
   );
 };

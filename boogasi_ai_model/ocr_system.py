@@ -331,138 +331,267 @@ class BankStatementParser:
     
     def categorize_transaction(self, description: str) -> str:
         """Categorize a transaction based on learned patterns."""
-        description_upper = description.upper()
-        
-        # Check exact merchant match
-        if description_upper in self.merchant_categories:
-            return self.merchant_categories[description_upper]
-        
-        # Check keyword matching
-        best_match = "uncategorized"
-        best_score = 0
-        
-        for category, keywords in self.category_patterns.items():
-            score = sum(1 for keyword in keywords if keyword in description_upper)
-            if score > best_score:
-                best_score = score
-                best_match = category
-        
-        # Fallback rules for common patterns
-        if best_match == "uncategorized":
-            description_lower = description.lower()
-            
-            if any(word in description_lower for word in ['salary', 'payroll', 'income', 'received from', 'credit']):
-                return 'income'
-            elif any(word in description_lower for word in ['grocery', 'supermarket', 'market']):
-                return 'groceries'
-            elif any(word in description_lower for word in ['restaurant', 'food', 'cafe', 'jollibee', 'mcdo', 'pizza', 'coffee']):
-                return 'dining'
-            elif any(word in description_lower for word in ['meralco', 'pldt', 'water', 'utility', 'electric', 'gas payment']):
-                return 'utilities'
-            elif any(word in description_lower for word in ['shell', 'petron', 'caltex', 'gas', 'fuel', 'uber', 'grab']):
-                return 'transportation'
-            elif any(word in description_lower for word in ['atm', 'withdrawal', 'cash']):
-                return 'cash_withdrawal'
-            elif any(word in description_lower for word in ['transfer out', 'send', 'gcash', 'paymaya']):
-                return 'transfer_out'
-            elif any(word in description_lower for word in ['transfer in', 'transfer from', 'fund transfer']):
-                return 'transfer_in'
-            elif any(word in description_lower for word in ['bill', 'payment', 'debit']):
-                return 'bill_payment'
-            elif any(word in description_lower for word in ['mall', 'shopping', 'lazada', 'shopee', 'store']):
-                return 'shopping'
-        
-        return best_match
+        if not description:
+            return "uncategorized"
+        desc_lower = description.lower()
+
+        # 1) Explicit merchant / service keywords (high priority)
+        if any(k in desc_lower for k in ['netflix', 'google play', 'googleplay', 'spotify', 'youtube', 'hulu', 'subscription', 'subs']):
+            return 'entertainment'
+
+        # 2) Explicit transfer phrases (outgoing)
+        if re.search(r'\btransfer to\b|\btransfer\s+to\s+bank\b|\btransfer\b.*to\b', desc_lower):
+            return 'transfer_out'
+        if re.search(r'\btransfer from\b|\btransfer in\b|\bcash-in\b|\bdeposit\b', desc_lower):
+            return 'transfer_in'
+
+        # 3) Withdrawals / ATM
+        if any(k in desc_lower for k in ['withdrawal', 'atm', 'debit card withdrawal', 'card withdrawal']):
+            return 'cash_withdrawal'
+
+        # 4) Other category heuristics (groceries, dining, utilities, etc.)
+        if any(k in desc_lower for k in ['grocery', 'supermarket', 'market']):
+            return 'groceries'
+        if any(k in desc_lower for k in ['restaurant', 'food', 'cafe', 'jollibee', 'mcdo', 'pizza', 'starbucks', 'subscription payment']):
+            return 'dining' if 'restaurant' in desc_lower or 'food' in desc_lower else 'entertainment'
+        if any(k in desc_lower for k in ['meralco', 'pldt', 'water', 'utility', 'electric']):
+            return 'utilities'
+
+        # 5) Only mark as opening_balance when description explicitly indicates it
+        if any(phrase in desc_lower for phrase in ['opening balance', 'balance b/f', 'balance brought forward', 'previous balance']):
+            return 'opening_balance'
+
+        # 6) fallback to learned patterns if present
+        for merchant, cat in self.patterns.get('merchant_categories', {}).items():
+            if merchant.lower() in desc_lower:
+                return cat
+
+        for cat, patterns in self.patterns.get('category_patterns', {}).items():
+            for p in patterns:
+                if p.lower() in desc_lower:
+                    return cat
+
+        return 'uncategorized'
     
     def parse(self, text: str) -> Dict:
-        """Parse bank statement text into structured data."""
+        """Parse bank statement text into structured data matching labeled format."""
         result = {
-            "account_info": {},
-            "statement_period": {},
-            "balance": {},
-            "transactions": [],
-            "summary": {}
+            "bank": "HSBC_UK",  # Can be detected from letterhead
+            "statement_type": "bank_statement",
+            "statement_period": "",
+            "currency": "GBP",
+            "payment_summary": {},
+            "transactions": []
         }
+
+        # Initialize opening balance
+        opening_balance = 0.0  # Default value if not found
         
-        # Extract account number
-        account_patterns = [
-            r'Account\s+(?:Number|No\.?)[:\s]*(\*+\d{4}|\d{4,})',
-            r'Acct\s+(?:#|No\.?)[:\s]*(\*+\d{4}|\d{4,})',
+        # Parse summary section for opening balance
+        summary_patterns = [
+            r'Opening\s+Balance\s*[₱£$]?\s*([-\d,]+(?:\.\d{1,2})?)',
+            r'Balance\s+B/F\s*[₱£$]?\s*([-\d,]+(?:\.\d{1,2})?)',
+            r'Previous\s+Balance\s*[₱£$]?\s*([-\d,]+(?:\.\d{1,2})?)',
+            r'Opening\s+Balance[:\s]*([-\d,]+(?:\.\d{1,2})?)'
         ]
-        for pattern in account_patterns:
-            match = re.search(pattern, text, re.IGNORECASE)
-            if match:
-                result["account_info"]["account_number"] = match.group(1)
+        
+        for pattern in summary_patterns:
+            summary_match = re.search(pattern, text, re.IGNORECASE)
+            if summary_match:
+                try:
+                    opening_balance = float(summary_match.group(1).replace(',', ''))
+                except Exception:
+                    opening_balance = 0.0
                 break
         
-        # Extract statement period
-        date_range_pattern = r'(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})\s*[-–to]+\s*(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})'
-        match = re.search(date_range_pattern, text)
-        if match:
-            result["statement_period"]["start_date"] = match.group(1)
-            result["statement_period"]["end_date"] = match.group(2)
+        # Store opening balance in payment summary
+        result["payment_summary"]["openingBalance"] = opening_balance
         
-        # Extract balances
-        balance_patterns = {
-            'beginning': r'(?:Beginning|Previous|Opening)\s+Balance[:\s]*[₱$]?\s*([\d,]+\.?\d*)',
-            'ending': r'(?:Ending|Closing|Current)\s+Balance[:\s]*[₱$]?\s*([\d,]+\.?\d*)'
-        }
+        # Initialize current balance with opening balance
+        current_balance = opening_balance
+
+        # Split text into lines for transaction processing (preserve order)
+        raw_lines = text.splitlines()
+        lines = [ln.rstrip() for ln in raw_lines if ln.strip()]
+
+        transactions = []
+
+        # Regex helpers
+        # Date at line start: "07 Jun 2024", "07 Jun 24", "07 Jun", or "07/06/2024"
+        month_names = r'(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)'
+        date_start_re = re.compile(
+            rf'^(?:\d{{1,2}}[\/\-]\d{{1,2}}[\/\-]\d{{2,4}}|\d{{1,2}}\s+{month_names}\b(?:\s+\d{{2,4}})?)',
+            re.IGNORECASE
+        )
+        # Amount pattern - pick rightmost numeric-looking token (with optional currency)
+        amount_re = re.compile(r'([£$₱]?\s*-?\d{1,3}(?:,\d{3})*(?:\.\d{1,2})?)')
+
+        i = 0
+        while i < len(lines):
+            line = lines[i].strip()
+
+            # Start of a transaction identified by date at beginning
+            if date_start_re.match(line):
+                # Extract date token (first token matching date pattern)
+                date_token_match = date_start_re.match(line)
+                date_token = date_token_match.group(0).strip()
+                # Remove date token from the first-line remainder
+                first_remainder = line[len(date_token):].strip()
+                description_parts = []
+                if first_remainder:
+                    description_parts.append(first_remainder)
+
+                amount = None
+                txn_marker = None  # 'Debit' / 'Credit' or None
+
+                j = i + 1
+                lookahead_limit = 6  # tolerate multi-line descriptions up to this many lines
+                looked = 0
+
+                # Also check the same line for an amount (sometimes amount sits on same line)
+                same_line_amounts = amount_re.findall(line)
+                if same_line_amounts:
+                    # choose rightmost numeric token
+                    amt_token = same_line_amounts[-1]
+                    try:
+                        amt_val = float(amt_token.replace('£','').replace('$','').replace('₱','').replace(',','').strip())
+                        amount = amt_val
+                        lowered = line.lower()
+                        if 'debit' in lowered or 'payment to' in lowered or 'withdraw' in lowered or 'dra wn' in lowered:
+                            amount = -abs(amount)
+                        elif 'credit' in lowered or 'received' in lowered or 'deposit' in lowered:
+                            amount = abs(amount)
+                    except Exception:
+                        amount = None
+
+                # Look ahead to gather description continuation and to find amount
+                while amount is None and j < len(lines) and looked < lookahead_limit:
+                    nxt = lines[j].strip()
+                    # If next line starts with a date => stop (new transaction starts)
+                    if date_start_re.match(nxt):
+                        break
+
+                    # Search for amount tokens in the next line
+                    am_matches = amount_re.findall(nxt)
+                    if am_matches:
+                        amt_token = am_matches[-1]
+                        try:
+                            amt_val = float(amt_token.replace('£','').replace('$','').replace('₱','').replace(',','').strip())
+                            # Determine debit/credit by presence of keywords on this line or previous parts
+                            lowered = nxt.lower()
+                            if 'debit' in lowered or 'payment to' in lowered or 'withdraw' in lowered or 'dra wn' in lowered or ('paid' in lowered and 'received' not in lowered):
+                                amt_val = -abs(amt_val)
+                                txn_marker = 'debit'
+                            elif 'credit' in lowered or 'received' in lowered or 'deposit' in lowered:
+                                amt_val = abs(amt_val)
+                                txn_marker = 'credit'
+                            else:
+                                # If no explicit marker, try to infer from words in description parts
+                                prev_text = ' '.join(description_parts + [nxt]).lower()
+                                if any(w in prev_text for w in ['received', 'credit', 'deposit', 'inward']):
+                                    txn_marker = 'credit'
+                                elif any(w in prev_text for w in ['payment to', 'debit', 'withdraw', 'paid', 'dra wn']):
+                                    txn_marker = 'debit'
+                                # default: keep as positive (will be classified later)
+                            amount = amt_val
+                        except Exception:
+                            amount = None
+
+                        # If there is descriptive text before the amount token on that same line, capture it
+                        before_amt = nxt[:nxt.rfind(amt_token)].strip()
+                        if before_amt:
+                            description_parts.append(before_amt)
+                        # Done with this transaction (found amount)
+                        j += 1
+                        break
+                    else:
+                        # Not an amount line => continuation of description
+                        description_parts.append(nxt)
+                    j += 1
+                    looked += 1
+
+                # If still no amount, as a last resort search the next few lines for any numeric token (wider net)
+                if amount is None:
+                    k = j
+                    while k < len(lines) and k < i + 10:
+                        fallback_matches = amount_re.findall(lines[k])
+                        if fallback_matches:
+                            amt_token = fallback_matches[-1]
+                            try:
+                                amt_val = float(amt_token.replace('£','').replace('$','').replace('₱','').replace(',','').strip())
+                                amount = amt_val
+                                lowered = lines[k].lower()
+                                if 'debit' in lowered or 'payment to' in lowered or 'withdraw' in lowered:
+                                    amount = -abs(amount)
+                                elif 'credit' in lowered or 'received' in lowered:
+                                    amount = abs(amount)
+                                # capture any prefix
+                                before_amt = lines[k][:lines[k].rfind(amt_token)].strip()
+                                if before_amt:
+                                    description_parts.append(before_amt)
+                                j = k + 1
+                                break
+                            except Exception:
+                                pass
+                        k += 1
+
+                # Build final description
+                description = ' '.join(part for part in description_parts if part).strip()
+                description = re.sub(r'\s+', ' ', description)
+
+                # Use date token as-is; normalization happens later
+                date_val = date_token
+
+                # Only add transaction when we have at least an amount (and description if possible)
+                if amount is not None:
+                    txn = {
+                        "date": date_val,
+                        "description": description or "", 
+                        "amount": amount,
+                        "category": self.categorize_transaction(description or "")
+                    }
+                    transactions.append(txn)
+                    # update running balance
+                    try:
+                        current_balance += float(amount)
+                    except Exception:
+                        pass
+
+                # Advance main pointer to next unprocessed line
+                i = j
+            else:
+                i += 1
+
+        # Sort transactions by date where possible (attempt to normalize simple "DD Mon YYYY" forms)
+        def sort_key(tx):
+            d = tx.get('date','')
+            # try to normalize simple formats like "07 Jun 2024" -> YYYY-MM-DD for sorting
+            m = re.match(r'(\d{1,2})\s+([A-Za-z]{3,9})(?:\s+(\d{2,4}))?', d)
+            if m:
+                day = int(m.group(1))
+                mon = m.group(2)[:3].title()
+                year = m.group(3) or ''
+                # crude month map
+                months = {"Jan":1,"Feb":2,"Mar":3,"Apr":4,"May":5,"Jun":6,"Jul":7,"Aug":8,"Sep":9,"Oct":10,"Nov":11,"Dec":12}
+                mnum = months.get(mon, 0)
+                y = int(year) if year and len(year) == 4 else (2000 + int(year) if year else 0)
+                return (y, mnum, day)
+            # fallback: return as-is
+            return (0,0,0)
+        transactions.sort(key=sort_key)
+
+        result["transactions"] = transactions
+
+        # Calculate payment summary
+        credits = sum(t["amount"] for t in transactions if t["amount"] > 0)
+        debits = abs(sum(t["amount"] for t in transactions if t["amount"] < 0))
         
-        for balance_type, pattern in balance_patterns.items():
-            match = re.search(pattern, text, re.IGNORECASE)
-            if match:
-                value = float(match.group(1).replace(',', ''))
-                result["balance"][balance_type] = value
-        
-        # Extract transactions
-        txn_pattern = r'(\d{1,2}[/-]\d{1,2}[/-]?\d{0,4})\s+([A-Za-z0-9\s\-/\.]+?)\s+([₱$]?\s*[\d,]+\.?\d{2})'
-        
-        matches = re.finditer(txn_pattern, text)
-        
-        total_credit = 0
-        total_debit = 0
-        
-        for match in matches:
-            date = match.group(1)
-            description = match.group(2).strip()
-            amount_str = match.group(3).replace(',', '').replace('₱', '').replace('$', '').strip()
-            
-            # Skip if description is too short or looks like a header
-            if len(description) < 3 or description.upper() in ['DATE', 'DESCRIPTION', 'AMOUNT', 'BALANCE']:
-                continue
-            
-            try:
-                amount = float(amount_str)
-                
-                # Determine if credit or debit
-                is_credit = any(word in description.lower() for word in 
-                    ['deposit', 'salary', 'credit', 'income', 'received', 'transfer from'])
-                
-                if is_credit:
-                    total_credit += amount
-                else:
-                    total_debit += amount
-                    amount = -amount
-                
-                category = self.categorize_transaction(description)
-                
-                result["transactions"].append({
-                    "date": date,
-                    "description": description,
-                    "amount": amount,
-                    "category": category
-                })
-            except ValueError:
-                continue
-        
-        # Summary
-        result["summary"] = {
-            "total_transactions": len(result["transactions"]),
-            "total_credit": round(total_credit, 2),
-            "total_debit": round(total_debit, 2),
-            "net_change": round(total_credit - total_debit, 2)
-        }
-        
+        result["payment_summary"].update({
+            "paymentsIn": round(credits, 2),
+            "paymentsOut": round(debits, 2),
+            "closingBalance": round(current_balance, 2)
+        })
+
         return result
 
 

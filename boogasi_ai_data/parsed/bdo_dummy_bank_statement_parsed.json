@@ -2,35 +2,19 @@
   "success": true,
   "filename": "bdo_dummy_bank_statement.jpg",
   "document_type": "bank_statement",
-  "processed_at": "2025-10-22T02:09:09.580969",
+  "processed_at": "2025-10-29T12:14:09.326958",
   "data": {
-    "account_info": {},
-    "statement_period": {},
-    "balance": {
-      "ending": 8000.0
+    "bank": "HSBC_UK",
+    "statement_type": "bank_statement",
+    "statement_period": "",
+    "currency": "GBP",
+    "payment_summary": {
+      "openingBalance": 0.0,
+      "paymentsIn": 0,
+      "paymentsOut": 0,
+      "closingBalance": 0.0
     },
-    "transactions": [
-      {
-        "date": "71/55",
-        "description": "Your branch\n\nBDO RIZAL AVENUE SAN PABLO CITY\n\nDeposits",
-        "amount": 8717.0,
-        "type": "income",
-        "category": "opening_balance"
-      },
-      {
-        "date": "40/7000",
-        "description": "bdo.com.ph",
-        "amount": 8631.0,
-        "type": "expense",
-        "category": "dining"
-      }
-    ],
-    "summary": {
-      "total_transactions": 2,
-      "total_credit": 8717.0,
-      "total_debit": 8631.0,
-      "net_change": 86.0
-    },
+    "transactions": [],
     "document_type": "bank_statement"
   }
 }

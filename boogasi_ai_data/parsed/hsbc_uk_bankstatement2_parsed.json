@@ -2,29 +2,76 @@
   "success": true,
   "filename": "hsbc_uk_bankstatement2.png",
   "document_type": "bank_statement",
-  "processed_at": "2025-10-22T02:09:14.504282",
+  "processed_at": "2025-10-29T12:14:14.261340",
   "data": {
-    "account_info": {},
-    "statement_period": {},
-    "balance": {
-      "beginning": 0.57,
-      "ending": 2.0
+    "bank": "HSBC_UK",
+    "statement_type": "bank_statement",
+    "statement_period": "",
+    "currency": "GBP",
+    "payment_summary": {
+      "openingBalance": 0.57,
+      "paymentsIn": 308.77,
+      "paymentsOut": 0,
+      "closingBalance": 309.34
     },
     "transactions": [
       {
-        "date": "2/4",
-        "description": "NEW CROSS ROAD",
-        "amount": 202.34,
-        "type": "expense",
-        "category": "transportation"
+        "date": "24 Nov 23",
+        "description": "BALANCE BROUGHT FORWARD.",
+        "amount": 23.0,
+        "type": "income",
+        "category": "opening_balance"
+      },
+      {
+        "date": "25 Nov 23",
+        "description": "oR Transfer",
+        "amount": 23.0,
+        "type": "income",
+        "category": "uncategorized"
+      },
+      {
+        "date": "26 Nov 23",
+        "description": "‘Telephone Bill Payment",
+        "amount": 23.0,
+        "type": "income",
+        "category": "uncategorized"
+      },
+      {
+        "date": "27 Nov 23",
+        "description": "DHL delivery services 30.50",
+        "amount": 30.5,
+        "type": "income",
+        "category": "uncategorized"
+      },
+      {
+        "date": "29 Nov 23",
+        "description": "CR Jessica George",
+        "amount": 23.0,
+        "type": "income",
+        "category": "uncategorized"
+      },
+      {
+        "date": "01 Dec 23",
+        "description": "British Gas Payment",
+        "amount": 23.0,
+        "type": "income",
+        "category": "uncategorized"
+      },
+      {
+        "date": "02 Dec 23",
+        "description": "Costa Cofee 7.00 10.27",
+        "amount": 10.27,
+        "type": "income",
+        "category": "uncategorized"
+      },
+      {
+        "date": "30 Dec 23",
+        "description": "Uber 28.90 153",
+        "amount": 153.0,
+        "type": "income",
+        "category": "uncategorized"
       }
     ],
-    "summary": {
-      "total_transactions": 1,
-      "total_credit": 0,
-      "total_debit": 202.34,
-      "net_change": -202.34
-    },
     "document_type": "bank_statement"
   }
 }

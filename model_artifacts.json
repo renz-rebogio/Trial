@@ -1,6 +1,6 @@
 {
   "version": "0.1.0-free",
-  "created_at": "2025-10-22T02:09:07.520726",
+  "created_at": "2025-10-29T12:14:07.402014",
   "training_samples": 8,
   "data_source": "labeled",
   "ml_backend": "rule-based + pattern matching",

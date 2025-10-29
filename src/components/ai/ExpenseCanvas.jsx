@@ -310,7 +310,7 @@ const TransactionsTable = ({ transactions = [] }) => {
   }
 
   return (
-    <div className="rounded-lg border bg-white shadow mb-6">
+    <div className="rounded-lg border bg-white shadow mb-6 w-full overflow-x-auto">
       <div className="p-4 border-b">
         <h4 className="text-md font-semibold text-gray-900">Transactions</h4>
       </div>
@@ -386,14 +386,16 @@ const ExpenseCanvas = ({ result = {} }) => {
 
   return (
     <div
-      className="space-y-6"
+      className="space-y-6 w-full max-w-full"
       role="region"
       aria-label="Expense analysis canvas"
     >
-      <TransactionsTable transactions={transactions} />
+      <div className="w-full">
+        <TransactionsTable transactions={transactions} />
+      </div>
 
       {/* Overall Transaction Summary */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
         <div className="col-span-2 bg-white rounded-lg shadow p-4">
           <div className="grid grid-cols-1 gap-6">
             <PieBlock summary={overallSummary} title="Overall Cash Flow" />

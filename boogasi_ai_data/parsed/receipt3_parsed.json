@@ -2,7 +2,7 @@
   "success": true,
   "filename": "receipt3.jpg",
   "document_type": "receipt",
-  "processed_at": "2025-10-22T02:09:17.204452",
+  "processed_at": "2025-10-29T12:14:16.799830",
   "data": {
     "merchant_info": {
       "name": "Hotel Restaurant and Bar"
@@ -60,28 +60,28 @@
         "description": "Hendrick Gin & Tonic",
         "amount": 10.5,
         "type": "expense",
-        "category": "transfer_out"
+        "category": "uncategorized"
       },
       {
         "date": "2020-09-25",
         "description": "Ginger Mule",
         "amount": 9.5,
         "type": "expense",
-        "category": "transfer_out"
+        "category": "uncategorized"
       },
       {
         "date": "2020-09-25",
         "description": "Glass Camus Zin",
         "amount": 24.0,
         "type": "expense",
-        "category": "transfer_out"
+        "category": "uncategorized"
       },
       {
         "date": "2020-09-25",
         "description": "Titos Vodka Soda",
         "amount": 12.0,
         "type": "expense",
-        "category": "transfer_out"
+        "category": "uncategorized"
       },
       {
         "date": "2020-09-25",
@@ -95,7 +95,7 @@
         "description": "BALANCE",
         "amount": 60.76,
         "type": "expense",
-        "category": "opening_balance"
+        "category": "uncategorized"
       }
     ]
   }
