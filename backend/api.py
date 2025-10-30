@@ -3,13 +3,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Dict, Optional, Any
 from pathlib import Path
+from datetime import datetime
 
 # Update import to use new function
 from boogasi_ai_model.ai_insights import generate_insights, load_learned_patterns
 from boogasi_ai_model.ocr_system import BankStatementParser
 
 # Initialize AI components with learned patterns
-BASE_DIR = Path(__file__).parent  # Remove one .parent
+BASE_DIR = Path(__file__).parent
 PATTERNS_FILE = BASE_DIR / "learned_patterns.json"
 MODEL_FILE = BASE_DIR / "model_artifacts.json"
 
@@ -29,14 +30,42 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
-        "http://localhost:5173",  # Vite dev server
-        "https://boogasi.com",  # Your Hostinger domain
-        "https://www.boogasi.com",  # www version
+        "http://localhost:5173",
+        "https://boogasi.com",
+        "https://www.boogasi.com",
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# ========== NEW: Root and Health Endpoints ==========
+@app.get("/")
+async def root():
+    """Root endpoint with API information"""
+    return {
+        "message": "Welcome to Boogasi API",
+        "status": "running",
+        "version": "1.0.0",
+        "endpoints": {
+            "health": "/health",
+            "insights": "/api/insights",
+            "parse_and_insights": "/api/parse-and-insights"
+        }
+    }
+
+@app.get("/health")
+async def health_check():
+    """Health check endpoint"""
+    return {
+        "status": "ok",
+        "timestamp": datetime.now().isoformat(),
+        "patterns_loaded": {
+            "merchant_categories": len(patterns.get('merchant_categories', {})),
+            "category_patterns": len(patterns.get('category_patterns', {}))
+        }
+    }
+# ====================================================
 
 class TransactionBase(BaseModel):
     date: str
