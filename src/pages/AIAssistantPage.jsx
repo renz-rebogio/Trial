@@ -368,7 +368,7 @@ const AIAssistantPage = () => {
       if (feature === "combined_insights") {
         setLoadingMessage("Running all analyses... This may take a moment.");
 
-        // Call all features in parallel
+        // Call all features
         const [expenseSummary, cashFlow, flagged, weeklyReport] =
           await Promise.all([
             getAIInsights(transactions, "expense_summary"),
@@ -376,6 +376,14 @@ const AIAssistantPage = () => {
             getAIInsights(transactions, "flag_unusual_transactions"),
             getAIInsights(transactions, "weekly_report"),
           ]);
+
+        // 🔍 DEBUG: Check what flagged returns
+        console.log("🚨 Flagged transactions from API:", {
+          flagged,
+          hasFlagged: !!flagged,
+          flaggedKeys: Object.keys(flagged || {}),
+          flaggedArray: flagged?.flagged || flagged?.flags,
+        });
 
         const combinedResult = {
           feature: "combined_insights",
@@ -395,11 +403,22 @@ const AIAssistantPage = () => {
           },
         };
 
+        console.log("📦 Combined result structure:", {
+          hasFlagged: !!combinedResult.detailed_analyses.flagged_transactions,
+          flaggedData: combinedResult.detailed_analyses.flagged_transactions,
+        });
+
         const uiResult = {
           feature: "combined_insights",
           data: combinedResult,
-          transactions: transactions,
+          transactions: transactions, // ✅ Make sure this is here
         };
+
+        console.log("📦 Setting combined analysis result:", {
+          hasTransactions: !!uiResult.transactions,
+          transactionCount: uiResult.transactions?.length,
+          hasFlagged: !!uiResult.data.detailed_analyses.flagged_transactions,
+        });
 
         setAnalysisResult(uiResult);
 

@@ -9,7 +9,7 @@ from boogasi_ai_model.ai_insights import generate_insights, load_learned_pattern
 from boogasi_ai_model.ocr_system import BankStatementParser
 
 # Initialize AI components with learned patterns
-BASE_DIR = Path(__file__).parent.parent
+BASE_DIR = Path(__file__).parent  # Remove one .parent
 PATTERNS_FILE = BASE_DIR / "learned_patterns.json"
 MODEL_FILE = BASE_DIR / "model_artifacts.json"
 
@@ -27,7 +27,12 @@ app = FastAPI()
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=[
+        "http://localhost:3000",
+        "http://localhost:5173",  # Vite dev server
+        "https://boogasi.com",  # Your Hostinger domain
+        "https://www.boogasi.com",  # www version
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import {
   Card,
   CardContent,
@@ -15,14 +15,54 @@ import { cn } from "@/lib/utils";
 
 const MAX_FILES = 10;
 
-const FileDataInput = ({
-  selectedFiles,
+export default function FileDataInput({
+  selectedFiles = [],
   handleFileChange,
   removeFile,
   manualTransactions,
   setManualTransactions,
-  acceptedFileTypes,
-}) => {
+  acceptedFileTypes = ".csv, .pdf, .png, .jpeg, .jpg",
+}) {
+  const inputRef = useRef(null);
+  const [isDragging, setIsDragging] = useState(false);
+
+  const openFilePicker = () => {
+    if (selectedFiles.length < MAX_FILES) {
+      inputRef.current?.click();
+    }
+  };
+
+  const onInputChange = (e) => {
+    if (typeof handleFileChange === "function") handleFileChange(e);
+  };
+
+  const onDrop = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+
+    if (selectedFiles.length >= MAX_FILES) return;
+
+    const files = e.dataTransfer?.files;
+    if (!files || files.length === 0) return;
+
+    // Create a synthetic event similar to the real input change
+    const syntheticEvent = { target: { files } };
+    if (typeof handleFileChange === "function") {
+      handleFileChange(syntheticEvent);
+    }
+  };
+
+  const onDragOver = (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "copy";
+    setIsDragging(true);
+  };
+
+  const onDragLeave = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
   return (
     <Card className="glassmorphic shadow-xl border-[hsl(var(--brighter-teal))]/30 bg-[hsl(var(--card-bg-bright-teal-tint))]">
       <CardHeader>
@@ -42,36 +82,48 @@ const FileDataInput = ({
           >
             Upload Files (Max {MAX_FILES})
           </Label>
-          <div className="mt-2 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed rounded-md border-muted-foreground/50 hover:border-[hsl(var(--boogasi-green-val))] transition-colors">
-            <div className="space-y-1 text-center">
+          <div
+            className={cn(
+              "mt-2 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed rounded-md transition-all cursor-pointer",
+              isDragging
+                ? "border-[hsl(var(--boogasi-green-val))] bg-[hsl(var(--boogasi-green-val))]/10"
+                : "border-muted-foreground/50 hover:border-[hsl(var(--boogasi-green-val))]",
+              selectedFiles.length >= MAX_FILES &&
+                "opacity-50 cursor-not-allowed"
+            )}
+            onClick={openFilePicker}
+            onDrop={onDrop}
+            onDragOver={onDragOver}
+            onDragLeave={onDragLeave}
+          >
+            <div className="space-y-1 text-center pointer-events-none">
               <UploadCloud
                 className={cn(
-                  "mx-auto h-12 w-12 text-muted-foreground icon-neon-green file-upload-icon"
+                  "mx-auto h-12 w-12 text-muted-foreground icon-neon-green file-upload-icon",
+                  isDragging && "text-[hsl(var(--boogasi-green-val))]"
                 )}
               />
               <div className="flex text-sm text-muted-foreground">
-                <label
-                  htmlFor="transactions-file-input"
-                  className="relative cursor-pointer rounded-md font-medium text-[hsl(var(--boogasi-blue-val))] hover:text-[hsl(var(--boogasi-blue-val))]/80 focus-within:outline-none focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2"
-                >
-                  <span>Select files</span>
-                  <Input
-                    id="transactions-file-input"
-                    name="transactions-file-input"
-                    type="file"
-                    className="sr-only"
-                    onChange={handleFileChange}
-                    accept={acceptedFileTypes}
-                    multiple
-                    disabled={selectedFiles.length >= MAX_FILES}
-                  />
-                </label>
+                <span className="font-medium text-[hsl(var(--boogasi-blue-val))]">
+                  {isDragging ? "Drop files here" : "Click to select files"}
+                </span>
                 <p className="pl-1">or drag and drop</p>
               </div>
               <p className="text-xs text-muted-foreground">
                 CSV, PDF, PNG, JPG up to 5MB each
               </p>
             </div>
+            <Input
+              ref={inputRef}
+              id="transactions-file-input"
+              name="transactions-file-input"
+              type="file"
+              className="sr-only"
+              onChange={onInputChange}
+              accept={acceptedFileTypes}
+              multiple
+              disabled={selectedFiles.length >= MAX_FILES}
+            />
           </div>
           {selectedFiles.length > 0 && (
             <div className="mt-4 space-y-2">
@@ -140,6 +192,4 @@ const FileDataInput = ({
       </CardContent>
     </Card>
   );
-};
-
-export default FileDataInput;
+}

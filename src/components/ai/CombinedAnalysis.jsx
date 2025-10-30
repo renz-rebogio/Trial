@@ -68,15 +68,21 @@ export default function CombinedAnalysis({ result }) {
         </div>
       )}
 
-      {/* Flagged Transactions Section */}
-      {detailed_analyses?.flagged_transactions && (
-        <div className="bg-white p-6 rounded-lg shadow-lg">
-          <h3 className="text-2xl font-bold mb-4 text-gray-800">
-            ⚠️ Unusual Transactions
+      {/* Flagged Transactions */}
+      {detailed_analyses.flagged_transactions && (
+        <div className="border-2 border-gray-200 rounded-lg p-6">
+          <h3 className="text-2xl font-bold text-gray-800 mb-4">
+            ⚠️ Flagged Transactions
           </h3>
+
+          {combinedInsights.flagged && combinedInsights.flagged.length > 0 && (
+            <AIInsightsPanel insights={combinedInsights.flagged} />
+          )}
+
           <FlaggedTransactions
             insights={detailed_analyses.flagged_transactions}
-            transactions={result.transactions}
+            transactions={transactions || []}
+            hiddenTxIndices={new Set()}
           />
         </div>
       )}

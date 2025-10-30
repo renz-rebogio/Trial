@@ -1,8 +1,10 @@
 import React from "react";
-import ExpenseCanvas from "./ExpenseCanvas.jsx";
-import CashFlowCanvas from "./CashFlowCanvas.jsx";
-import FlaggedTransactions from "./FlaggedTransactions.jsx";
-import WeeklyReport from "./WeeklyReport.jsx";
+import ExpenseCanvas from "./ExpenseCanvas";
+import CashFlowCanvas from "./CashFlowCanvas"; // ✅ FIXED: Changed from CashFlowForecast
+import FlaggedTransactions from "./FlaggedTransactions";
+import WeeklyReport from "./WeeklyReport";
+import AIInsightsPanel from "./AIInsightsPanel";
+import { aiInsightsGenerator } from "@/services/aiInsightsGenerator";
 
 const ExpenseSummaryTable = ({ data }) => {
   if (!data?.summary || Object.keys(data.summary).length === 0) {
@@ -59,7 +61,7 @@ const ExpenseSummaryTable = ({ data }) => {
   );
 };
 
-const CombinedAnalysis = ({ data }) => {
+const CombinedAnalysis = ({ data, transactions }) => {
   if (!data?.detailed_analyses) {
     return (
       <div className="text-gray-500 italic">
@@ -70,8 +72,23 @@ const CombinedAnalysis = ({ data }) => {
 
   const { detailed_analyses } = data;
 
+  console.log("🔍 CombinedAnalysis received:", {
+    hasTransactions: !!transactions,
+    transactionCount: transactions?.length,
+    hasFlagged: !!detailed_analyses.flagged_transactions,
+    flaggedCount: detailed_analyses.flagged_transactions?.flagged?.length,
+  });
+
+  // Generate combined insights
+  const combinedInsights = aiInsightsGenerator.generateCombinedInsights(data);
+
   return (
     <div className="space-y-8">
+      {/* Overall Insights - Show at the top */}
+      {combinedInsights.overview && (
+        <AIInsightsPanel insights={combinedInsights.overview} />
+      )}
+
       {/* Summary Overview */}
       {data.summary && (
         <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6 border-2 border-blue-200">
@@ -102,6 +119,9 @@ const CombinedAnalysis = ({ data }) => {
           <h3 className="text-2xl font-bold text-gray-800 mb-4">
             💰 Expense Summary
           </h3>
+          {combinedInsights.expenses && (
+            <AIInsightsPanel insights={combinedInsights.expenses} />
+          )}
           <ExpenseCanvas result={detailed_analyses.expense_summary} />
         </div>
       )}
@@ -112,6 +132,9 @@ const CombinedAnalysis = ({ data }) => {
           <h3 className="text-2xl font-bold text-gray-800 mb-4">
             📈 Cash Flow Forecast
           </h3>
+          {combinedInsights.cashFlow && (
+            <AIInsightsPanel insights={combinedInsights.cashFlow} />
+          )}
           <CashFlowCanvas data={detailed_analyses.cash_flow_forecast} />
         </div>
       )}
@@ -122,6 +145,9 @@ const CombinedAnalysis = ({ data }) => {
           <h3 className="text-2xl font-bold text-gray-800 mb-4">
             ⚠️ Flagged Transactions
           </h3>
+          {combinedInsights.flagged && (
+            <AIInsightsPanel insights={combinedInsights.flagged} />
+          )}
           <FlaggedTransactions
             insights={detailed_analyses.flagged_transactions}
             transactions={data.transactions || []}
@@ -135,6 +161,9 @@ const CombinedAnalysis = ({ data }) => {
           <h3 className="text-2xl font-bold text-gray-800 mb-4">
             📅 Weekly Report
           </h3>
+          {combinedInsights.weekly && (
+            <AIInsightsPanel insights={combinedInsights.weekly} />
+          )}
           <WeeklyReport report={detailed_analyses.weekly_report} />
         </div>
       )}
@@ -151,26 +180,57 @@ const AIInsightsDisplay = ({ feature, data }) => {
     );
   }
 
+  // Generate insights for the specific feature
+  const insights = aiInsightsGenerator.generateInsights(feature, data);
+
   switch (feature) {
     case "expense_summary":
-      return <ExpenseCanvas result={data} />;
+      return (
+        <div className="space-y-6">
+          <AIInsightsPanel insights={insights} />
+          <ExpenseCanvas result={data} />
+        </div>
+      );
 
     case "cash_flow_forecast":
-      return <CashFlowCanvas data={data} />;
+      return (
+        <div className="space-y-6">
+          <AIInsightsPanel insights={insights} />
+          <CashFlowCanvas data={data} />
+        </div>
+      );
 
     case "flag_unusual_transactions":
+      console.log("Flagged transactions data:", data); // Debug log
       return (
-        <FlaggedTransactions
-          insights={data}
-          transactions={data.transactions || []}
-        />
+        <div className="space-y-6">
+          <AIInsightsPanel insights={insights} />
+          <FlaggedTransactions
+            insights={data}
+            transactions={data.transactions || data.flagged || []}
+          />
+        </div>
       );
 
     case "weekly_report":
-      return <WeeklyReport report={data} />;
+      return (
+        <div className="space-y-6">
+          <AIInsightsPanel insights={insights} />
+          <WeeklyReport report={data} />
+        </div>
+      );
 
     case "combined_insights":
-      return <CombinedAnalysis data={data} />;
+      // Extract transactions from the root level (passed from AIAssistantPage)
+      const transactionsForCombined =
+        window.__combinedAnalysisTransactions || [];
+      console.log(
+        "📊 Combined insights - transactions available:",
+        transactionsForCombined.length
+      );
+      return (
+        <CombinedAnalysis data={data} transactions={transactionsForCombined} />
+      );
 
     default:
       // Fallback to JSON display for unknown features
