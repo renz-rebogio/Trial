@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:8000';
+const API_URL = 'https://boogasi-backend.onrender.com';
 
 export async function getAIInsights(transactions, feature) {
     try {

@@ -25,7 +25,7 @@ import {
 import { getAIInsights } from "@/services/aiInsightsService";
 
 // Constants
-const API_URL = "http://localhost:8000";
+const API_URL = "https://boogasi-backend.onrender.com";
 const FEATURES = {
   EXPENSE_SUMMARY: "expense_summary",
   CASH_FLOW: "cash_flow_forecast",
