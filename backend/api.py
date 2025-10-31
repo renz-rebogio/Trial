@@ -20,6 +20,8 @@ app.add_middleware(
         "http://localhost:5173",
         "https://boogasi.com",
         "https://www.boogasi.com",
+        "https://boogasi.boogasi.com",
+        "https://www.boogasi.boogasi.com",
     ],
     allow_credentials=True,
     allow_methods=["*"],
