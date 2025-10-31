@@ -1,0 +1,129 @@
+@tailwind base;
+
+@layer base {
+  :root {
+    /* Default Theme (Dark background, light foreground) */
+    --background: 0 0% 100%; 
+    --foreground: 0 0% 3.9%; 
+
+    --card: 0 0% 100%; 
+    --card-foreground: 0 0% 3.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%; /* Default input background for dark theme */
+    
+    /* Boogasi Core Colors */
+    --boogasi-blue-val: 210 100% 56%;
+    --boogasi-red-val: 0 84.2% 60.2%;
+    --boogasi-yellow-val: 45 100% 51%;
+    --boogasi-green-val: 145 63.4% 49.2%;
+    --boogasi-cyan-val: 180 100% 39%;
+    --boogasi-purple-val: 260 89% 60%;
+    --boogasi-pink-val: 330 89% 60%;
+    --boogasi-orange-val: 25 100% 55%;
+    --boogasi-teal-val: 180 100% 39%; /* Can be same as cyan or a distinct teal */
+    --boogasi-white-val: 0 0% 100%;
+    --boogasi-black-val: 220 25% 10%; /* For high contrast text on light backgrounds */
+
+    /* Main Interactive Colors - These are used by buttons and interactive elements by default */
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%; /* Text on primary buttons */
+    
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%; /* Text on secondary buttons */
+
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%; /* Text on accent elements */
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%; /* Text on destructive buttons */
+
+    --muted: 0 0% 96.1%; 
+    --muted-foreground: 0 0% 45.1%; 
+    
+    --ring: 0 0% 3.9%; /* Focus ring, usually primary */
+    --radius: 0.5rem;
+
+
+    /* Brighter Theme Specific Variables (Applied when .brighter-theme-area is active) */
+    /* Backgrounds for the brighter theme */
+    --brighter-background-val: 0 0% 98%; /* Very light gray, almost white */
+    --brighter-card-bg-val: 0 0% 100%;   /* Pure white for cards */
+    --brighter-card-alt-bg-val: 210 30% 96%; /* Slightly off-white for subtle variation */
+
+    /* Text colors for the brighter theme (high contrast against light backgrounds) */
+    --brighter-foreground-val: var(--boogasi-black-val); /* Main text color on light backgrounds */
+    --brighter-muted-foreground-val: 220 10% 45%; /* Muted text on light backgrounds */
+    
+    /* Borders and Inputs for brighter theme */
+    --brighter-border-val: 220 15% 88%; /* Light gray border */
+    --brighter-input-bg-val: var(--boogasi-white-val); /* White input background */
+
+    /* Brighter Text Accents (for headings or specific text highlights on light backgrounds) */
+    --brighter-text-primary-val: var(--boogasi-blue-val);
+    --brighter-text-secondary-val: var(--boogasi-teal-val);
+    --brighter-text-accent-val: var(--boogasi-pink-val);
+    --brighter-text-success-val: var(--boogasi-green-val);
+    --brighter-text-warning-val: var(--boogasi-orange-val);
+    --brighter-text-info-val: var(--boogasi-purple-val);
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+  }
+
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700&display=swap');
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter', sans-serif; 
+    @apply text-foreground; 
+    font-weight: 700; 
+  }
+
+  p, span, div, li, label, button, input, textarea, select {
+     font-family: 'Inter', sans-serif;
+  }
+  
+  pre, code, .mono-font {
+    font-family: 'Roboto Mono', 'Consolas', 'Menlo', monospace; 
+  }
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+}

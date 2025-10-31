@@ -1,0 +1,1 @@
+import{an as c,av as s}from"./index-b765cb56.js";function a(t,e){const o=c(t),n=c(e),r=o.getTime()-n.getTime();return r<0?-1:r>0?1:r}function i(t){return s(t,Date.now())}function f(t){return e=>{const n=(t?Math[t]:Math.trunc)(e);return n===0?0:n}}export{i as a,a as c,f as g};

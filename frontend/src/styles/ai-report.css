@@ -1,0 +1,116 @@
+
+/* AI Report Specific Styles (Invoice Style) */
+.ai-report-invoice {
+  background-color: #FFFFFF;
+  color: #1f2937; /* A darker gray for better readability */
+  border: 1px solid #e5e7eb; /* A light gray border */
+  @apply p-4 sm:p-6 rounded-lg shadow-md;
+  font-family: 'Inter', sans-serif;
+}
+
+.ai-report-invoice .report-section-title {
+  border-bottom: 1px solid #e5e7eb;
+  @apply text-lg font-semibold mb-2 pb-1;
+  color: #3b82f6; /* A pleasant blue for all titles */
+}
+
+/* Force all title variations to be the same blue color */
+.ai-report-invoice .report-title-blue,
+.ai-report-invoice .report-title-red,
+.ai-report-invoice .report-title-green,
+.ai-report-invoice .report-title-suggestion-yellow,
+.ai-report-invoice .report-title-orange { 
+  color: #3b82f6 !important;
+}
+
+.ai-report-invoice pre {
+  @apply whitespace-pre-wrap text-sm font-normal leading-relaxed bg-transparent p-0;
+  color: #1f2937; /* Default text color for preformatted text */
+  font-family: 'Inter', sans-serif;
+}
+
+/* Table Styles */
+.ai-report-invoice table {
+  @apply min-w-full;
+  border-collapse: collapse; 
+}
+
+.ai-report-invoice thead {
+  background-color: #f9fafb; /* A very light gray for header */
+  border-bottom: 2px solid #d1d5db; /* A stronger border for header */
+}
+
+.ai-report-invoice th {
+  @apply px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wider;
+  color: #374151; /* Darker gray for table headers */
+}
+
+.ai-report-invoice tbody {
+  background-color: #FFFFFF;
+}
+
+.ai-report-invoice td {
+  @apply px-3 py-2 whitespace-nowrap text-sm;
+  color: #1f2937; /* Default text color for table cells */
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.ai-report-invoice tbody tr:last-child td {
+  border-bottom: none; 
+}
+
+/* Content Specific Text Colors */
+.ai-report-invoice .text-amount-positive {
+  color: #16a34a !important; /* A nice green */
+  font-weight: 600;
+}
+
+.ai-report-invoice .text-amount-negative {
+  color: #ef4444 !important; /* A clear red */
+  font-weight: 600;
+}
+
+.ai-report-invoice .text-content-suggestion { 
+  color: #57534e; /* A dark stone color for suggestions */
+  font-style: italic;
+}
+
+.ai-report-invoice .text-content-source {
+  color: #6b7280; /* Gray for source text */
+}
+
+.ai-report-invoice .text-content-currency {
+  color: #1f2937;
+  font-weight: 500; 
+}
+
+.ai-report-invoice .text-boogasi-ai-brand { 
+  color: #3b82f6; /* Blue for brand name */
+  font-weight: 600;
+}
+
+.ai-report-invoice .text-content-date-description { 
+  color: #4b5563; /* Medium gray for dates */
+}
+
+.ai-report-invoice .text-content-business-name { 
+  color: #111827; /* Darkest gray for business names */
+  font-weight: 500;
+}
+
+.ai-report-invoice .text-balance-number { 
+  color: #1f2937; 
+  font-weight: 600;
+}
+
+/* Ensure table cells align text properly */
+.ai-report-invoice th.text-right,
+.ai-report-invoice td.text-right {
+  text-align: right;
+}
+
+.ai-report-invoice th.text-center,
+.ai-report-invoice td.text-center {
+  text-align: center;
+}
+  
