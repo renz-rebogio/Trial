@@ -10,9 +10,9 @@ import {
   Tooltip,
   Legend,
   Colors,
-  Filler, // Add Filler plugin
+  Filler,
 } from "chart.js";
-import { Bar } from "react-chartjs-2";
+import { Chart } from "react-chartjs-2";
 
 // Register Chart.js components including Filler
 ChartJS.register(
@@ -25,7 +25,7 @@ ChartJS.register(
   Tooltip,
   Legend,
   Colors,
-  Filler // Register Filler plugin
+  Filler
 );
 
 const formatCurrency = (amount = 0) =>
@@ -349,7 +349,7 @@ const CashFlowForecast = ({ data }) => {
       <div className="rounded-lg border bg-white shadow p-6">
         <h4 className="text-lg font-semibold mb-4">Weekly Cash Flow</h4>
         <div className="h-[400px]">
-          <Bar data={chartData} options={options} />
+          <Chart data={chartData} options={options} type="bar" />
         </div>
       </div>
 
