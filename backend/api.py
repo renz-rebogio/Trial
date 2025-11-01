@@ -22,6 +22,7 @@ app.add_middleware(
         "https://www.boogasi.com",
         "https://boogasi.boogasi.com",
         "https://www.boogasi.boogasi.com",
+        "*",
     ],
     allow_credentials=True,
     allow_methods=["*"],
